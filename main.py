@@ -11,7 +11,7 @@ class Enemy:
     def enemy_name(self):
         name_list = ("Goblin", "Troll", "Bandit", "Man at Arms", "Knight", "House Guard", "Elite Guard",
         "Giant", "Dragon")
-        return "Your opponent is an {0}". format(random.choice(name_list))
+        return random.choice(name_list)
     @property
     def enemy_hp(self):
         hp = random.randint(10, 120)
@@ -24,7 +24,7 @@ class Enemy:
     def enemy_items(self):
         items = ("axe", "sword", "shield", "helmet", "leather armour")
         coins = random.randint(0, 12)
-        return "Items to loot: {0} & {1} coins".format(random.choice(items), coins)
+        return random.choice(items), coins
 
 class Player:
     @property
@@ -48,7 +48,7 @@ class Current_Player:
     def current_player_data(self):
         current_name = self.player_name
         current_hp = self.player_hp
-        return "{0}, {1}".format(current_name, current_hp)
+        return current_name, current_hp
 
 class Current_Enemy:
     def __init__(self, e_name, e_hp, e_loot):
@@ -60,7 +60,7 @@ class Current_Enemy:
         current_name = self.enemy_name
         current_hp = self.enemy_hp
         current_loot = self.enemy_loot
-        return "{0}, {1}".format(current_name, current_loot)
+        return current_name, current_loot
 
 class Dice:
     @property
