@@ -16,6 +16,7 @@ Version 1.0 targets:
 
 
 Planned development (Large additions - Version 2.0, 2.5, 3.0...):
+
 -- Buy materials with coins to produce weapons/ armour
 
 -- Craft custom items
