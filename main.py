@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 
-__author__ = 'danielwray'
-__copyright__ = 'danielwray'
 __Version__ = '0.0.4'
 __status__ = 'Prototype'
 
