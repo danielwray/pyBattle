@@ -6,13 +6,6 @@ __status__ = 'Prototype'
 import random
 
 
-# battle against an enemy of a random level
-# - win to get coins and buy equipment - equipment increases health points, and damage points
-#   - buy weapons (dp+), and armour/shields (hp+)
-#       - sword, axe, spear, or mace
-#       - leather, chain mail, plate armour, shield
-# - lose and start from scratch
-
 class Enemy:
     @property
     def enemy_name(self):
