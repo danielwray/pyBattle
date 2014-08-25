@@ -26,8 +26,12 @@ class Enemy:
     @property
     def enemy_items(self):
         items = ("axe", "sword", "shield", "helmet", "leather armour")
+        return random.choice(items)
+
+    @property
+    def enemy_coins(self):
         coins = random.randint(0, 12)
-        return random.choice(items), coins
+        return coins
 
 
 class Player:
@@ -49,8 +53,12 @@ class Player:
     @property
     def player_items(self):
         items = ()
+        return items
+
+    @property
+    def player_coins(self):
         coins = 0
-        return items, coins
+        return coins
 
 
 class CurrentPlayer:
@@ -102,7 +110,6 @@ def main():
 
     # game loop
     while game_active:
-        current_enemy = current_enemy_class.current_enemy_data
         yes_list = ("Y", "YES", "SURE", "ATTACK", "FIGHT", "HIT")
         no_list = ("N", "NO", "NOPE", "DEFEND", "SHIELD")
         quit_list = ("EXIT", "QUIT", "END")
@@ -110,7 +117,7 @@ def main():
         player_input_upper = player_fight_input.upper()
         fight_active = True
         if player_input_upper in yes_list:
-            print(current_enemy)
+            print("Your current enemy is an {0}".format(current_enemy_class.enemy_name))
             enemy_health = current_enemy_class.enemy_hp
             player_health = current_player_class.player_hp
             enemy_remaining_health = enemy_health
@@ -124,10 +131,12 @@ def main():
                 # player loses
                 if enemy_remaining_health < 0:
                     print("You win")
+                    # coins and items get pushed to player
                     fight_active = False
                 # player wins
                 elif player_remaining_health < 0:
                     print("You lose")
+                    # coins and items get pulled from player
                     fight_active = False
                 else:
                     # attack loop
