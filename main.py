@@ -47,7 +47,7 @@ class Player:
         return dp
 
 
-class Current_Player:
+class CurrentPlayer:
     def __init__(self, p_name, p_hp):
         self.player_name = p_name
         self.player_hp = p_hp
@@ -59,7 +59,7 @@ class Current_Player:
         return current_name, current_hp
 
 
-class Current_Enemy:
+class CurrentEnemy:
     def __init__(self, e_name, e_hp, e_loot):
         self.enemy_name = e_name
         self.enemy_hp = e_hp
@@ -88,78 +88,79 @@ def main():
     player_class = Player()
     enemy_class = Enemy()
     dice_class = Dice()
-    current_player_class = Current_Player(player_class.player_name, player_class.player_hp)
-    current_enemy_class = Current_Enemy(enemy_class.enemy_name, enemy_class.enemy_hp, enemy_class.enemy_items)
+    current_player_class = CurrentPlayer(player_class.player_name, player_class.player_hp)
+    current_enemy_class = CurrentEnemy(enemy_class.enemy_name, enemy_class.enemy_hp, enemy_class.enemy_items)
+    current_dice = dice_class.dice_data
 
     print(current_player_class.player_name)
 
     # game loop
-    while game_active == True:
-        __current_enemy = current_enemy_class.current_enemy_data
-        __yes_list = ("Y", "YES", "SURE", "ATTACK", "FIGHT", "HIT")
-        __no_list = ("N", "NO", "NOPE", "DEFEND", "SHIELD")
-        __quit_list = ("EXIT", "QUIT", "END")
-        __player_fight_input = input("Do you want to enter the fighting pit? \n")
-        __player_input_upper = __player_fight_input.upper()
-        __fight_active = True
-        if __player_input_upper in __yes_list:
-            current_enemy_class = Current_Enemy(enemy_class.enemy_name, enemy_class.enemy_hp, enemy_class.enemy_items)
-            print(__current_enemy)
-            __enemy_health = current_enemy_class.enemy_hp
-            __player_health = current_player_class.player_hp
-            __enemy_remaining_health = __enemy_health
-            __player_remaining_health = __player_health
+    while game_active:
+        current_enemy = current_enemy_class.current_enemy_data
+        yes_list = ("Y", "YES", "SURE", "ATTACK", "FIGHT", "HIT")
+        no_list = ("N", "NO", "NOPE", "DEFEND", "SHIELD")
+        quit_list = ("EXIT", "QUIT", "END")
+        player_fight_input = input("Do you want to enter the fighting pit? \n")
+        player_input_upper = player_fight_input.upper()
+        fight_active = True
+        if player_input_upper in yes_list:
+            current_enemy_class = CurrentEnemy(enemy_class.enemy_name, enemy_class.enemy_hp, enemy_class.enemy_items)
+            print(current_enemy)
+            enemy_health = current_enemy_class.enemy_hp
+            player_health = current_player_class.player_hp
+            enemy_remaining_health = enemy_health
+            player_remaining_health = player_health
             # battle system
-            while __fight_active:
+            while fight_active:
                 __player_attack = player_class.player_dp
                 __enemy_attack = enemy_class.enemy_dp
                 __player_attack_input = input("Do you wish to attack?")
                 __player_attack_input_upper = __player_attack_input.upper()
-                if __enemy_remaining_health < 0:
+                if enemy_remaining_health < 0:
                     print("You win")
-                    __fight_active = False
-                elif __player_remaining_health < 0:
+                    fight_active = False
+                elif player_remaining_health < 0:
                     print("You lose")
-                    __fight_active = False
+                    fight_active = False
                 else:
                     # attack loop
-                    if __player_attack_input_upper in __yes_list:
-                        __curret_dice = dice_class.dice_data
-                        if 4 < __curret_dice < 6:
+                    if __player_attack_input_upper in yes_list:
+                        current_dice = dice_class.dice_data
+                        if 4 < current_dice < 6:
                             # enemy loses health
-                            __enemy_remaining_health = __enemy_remaining_health - __player_attack
+                            enemy_remaining_health = enemy_remaining_health - __player_attack
                             print("Enemy hit")
-                        elif __curret_dice < 4:
+                        elif current_dice < 4:
                             # player loses health
-                            __player_remaining_health = __player_remaining_health - __enemy_attack
+                            player_remaining_health = player_remaining_health - __enemy_attack
                             print("You are hit")
-                        elif __curret_dice > 5:
+                        elif current_dice > 5:
                             # enemy defends and gains health
                             __enemy_add_health = random.randint(0, 10)
-                            __enemy_remaining_health = __enemy_remaining_health + __enemy_add_health
+                            enemy_remaining_health = enemy_remaining_health + __enemy_add_health
                             print("Enemy defended, and gained health")
                         else:
                             print("Missed")
                     # defend loop
-                    elif __player_attack_input_upper in __no_list:
-                        if __curret_dice > 4:
+                    elif __player_attack_input_upper in no_list:
+                        if current_dice > 4:
                             # player defends and gains health
                             print("You defend")
                             __player_add_health = random.randint(0, 20)
-                            __player_remaining_health = __player_remaining_health + __player_add_health
+                            player_remaining_health = player_remaining_health + __player_add_health
                         else:
                             # player loses health
-                            __player_remaining_health = __player_remaining_health - __enemy_attack
+                            player_remaining_health = player_remaining_health - __enemy_attack
                             print("You failed to defend")
-        elif __player_input_upper in __no_list:
+        elif player_input_upper in no_list:
             print("Would you like to change your offensive, and/ or defensive setup?")
-            if __player_attack_input_upper in __yes_list:
+            if __player_attack_input_upper in yes_list:
                 pass
-            elif __player_attack_input_upper in __no_list:
+            elif __player_attack_input_upper in no_list:
                 pass
             else:
                 break
-        elif __player_input_upper in __quit_list:
+        elif player_input_upper in quit_list:
             print("The tales will recall your name")
             exit()
         else:
