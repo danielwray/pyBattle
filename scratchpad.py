@@ -34,18 +34,11 @@ class Player:
         self.name = input("Your name? ")
         self.hp = 20
         self.hp_max = 25
-    def status_change(self):
-        self.state = input("fight? ")
-    def attack(self):
-        if self.state == "fight":
-            self.enemy_attacks()
-    def enemy_attacks(self):
-        if self.target.damage(self):
-            print ("test")
+        print ("test")
 
 def main():
     run = Player()
-    run.status_change()
+    run
 
 if __name__ == "__main__":
     main()
