@@ -135,7 +135,7 @@ def main():
                             print("You are hit")
                         elif __curret_dice > 5:
                             # enemy defends and gains health
-                            __enemy_add_health = random.randint(0, 20)
+                            __enemy_add_health = random.randint(0, 10)
                             __enemy_remaining_health = __enemy_remaining_health + __enemy_add_health
                             print("Enemy defended, and gained health")
                         else:

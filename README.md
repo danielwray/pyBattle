@@ -6,6 +6,7 @@ Small fighting game based upon random dice throws - A first step to learn Python
 Execute the script to name a character and fight against enemies, win or lose nothing much happens at the moment.
 
 Version 1.0 targets:
+
 -- Loot coins and weapons from defeated enemies
 
 -- Improve odds of winning depending on weapons and armour
@@ -17,6 +18,12 @@ Version 1.0 targets:
 
 Planned development (Large additions - Version 2.0, 2.5, 3.0...):
 
+-- Turn-based game play
+
+-- player-to-card system
+    -- create players with skill leveling, play as a solo character or save to cards and place on decks
+    -- use decks in battle against other opponents
+
 -- Buy materials with coins to produce weapons/ armour
 
 -- Craft custom items
@@ -24,7 +31,6 @@ Planned development (Large additions - Version 2.0, 2.5, 3.0...):
 -- Crafting and battling skill system
 
 -- 2D graphics system
-  -- Turn-based
   -- 8-bit retro style i.e. boss monster
   -- UI controls
   
