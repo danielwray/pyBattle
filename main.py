@@ -60,6 +60,16 @@ class Player:
         coins = 0
         return coins
 
+    @property
+    def player_wins(self):
+        p_wins = 0
+        return p_wins
+
+    @property
+    def player_loses(self):
+        p_loses = 0
+        return p_loses
+
 
 class CurrentPlayer:
     def __init__(self, p_name, p_hp):
@@ -84,7 +94,7 @@ class CurrentEnemy:
         current_name = self.enemy_name
         current_hp = self.enemy_hp
         current_loot = self.enemy_loot
-        return current_name, current_loot
+        return current_name, current_hp, current_loot
 
 
 class Dice:
