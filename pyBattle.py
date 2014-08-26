@@ -39,7 +39,7 @@ class Characters(object):
         elif self.state == "trading":
             print("You put on your haggling hat and start looking for deals")
         else:
-            print("You sit on a rock and ponder the mysterious of life")
+            print("You sit on a rock and ponder the mysteries of life")
 
     def create_player(self, player_name):
         self.name = player_name
