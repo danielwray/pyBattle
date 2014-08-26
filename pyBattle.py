@@ -18,14 +18,14 @@ class Characters(object):
     Contains properties of game characters (character objects)
     - name, health stats, state, levels, items...
     contains character related functions
-    - damage, states (normal, fighting, crafting et al), character creations...
+    - character_health, states (normal, fighting, crafting et al), character creations...
     """
 
     def __init__(self):
         self.name = " "
         self.min_health = 1
         self.cur_health = 1
-        self.max_health = 200
+        self.max_health = 1
         self.state = " "
         self.skill_level = 1
         self.skill_crafting = 1
@@ -33,41 +33,55 @@ class Characters(object):
         self.skill_trading = 1
         self.item_list = {}
 
-    def damage(self, target):
-        pass
-
     def game_state(self, new_state):
         self.state = new_state
         if self.state == "normal":
             print(" ")
+
         elif self.state == "fight":
             fight_active = True
-            print("You stumble upon an fierce enemy\n")
-            spawn_enemy = EnemyCharacter()
-            enemy_stats = spawn_enemy.new_enemy
-            # display new enemy stats
+            battling = True
+            p_character = PlayerCharacter()
+            e_character = EnemyCharacter("Goblin", randint(10, 100), randint(1, 3), randint(1, 3),
+                                         {"Sword": "A badly made goblin sword, made from old iron."})
+
+            enemy_stats = e_character.new_enemy()
+            print("You stumble upon an fierce {0}\n".format(e_character.name))
             for i in sorted(enemy_stats):
                 print(i, enemy_stats[i])
 
+            player_health = p_character.cur_health
+            enemy_health = e_character.cur_health
+            enemy_min_health = e_character.min_health
+
             while fight_active:
+                dice_roll = Dice()
                 print("Do you wish to fight, or try to run? ")
                 command = PlayerInput.input_parser()
                 if command == "fight":
-                    dice_roll = Dice()
                     print("You secure your armour, draw your weapon, and give pray to the gods...")
-                    if dice_roll.roll_comparison:
-                        # insert enemy_health - character_damage here
-                        # if enemy_health < 0
-                        print("win")
-                        return False
-                    elif not dice_roll.roll_comparison:
-                        # insert character_health - enemy_damage here
-                        # if character_health < 0
-                        print("Lose")
-                        return False
-                    else:
-                        # print something about parrying etc
-                        print("Missed")
+                    while battling:
+                        if dice_roll.roll_comparison() == "attack":
+                            print("Attacking\n")
+                            enemy_health -= p_character.skill_fighting * randint(1, 6)
+                            print("The enemy has {0} health remaining".format(enemy_health))
+                            if enemy_health <= enemy_min_health:
+                                print("You win\n")
+                                return False
+                            else:
+                                break
+                        elif dice_roll.roll_comparison() == "defend":
+                            print("Enemy Attacking\n")
+                            player_health -= e_character.skill_fighting * randint(1, 6)
+                            print("You have {0} health remaining".format(enemy_health))
+                            if player_health <= 1:
+                                print("You lost\n")
+                                return False
+                            else:
+                                break
+                        elif dice_roll.roll_comparison() == "draw":
+                            print("You both miss")
+                            break
                 elif command == "run":
                     print("You realise you cannot win and try to run...")
                     return False
@@ -77,12 +91,15 @@ class Characters(object):
         elif self.state == "rest":
             rest_active = True
             print("You sit and rest for a moment; the sun beams down and you feel well\n")
+
         elif self.state == "craft":
             craft_active = True
             print("You pull out a hammer and start getting creative\n")
+
         elif self.state == "trade":
             trade_active = True
             print("You put on your haggling hat and start looking for deals\n")
+
         else:
             print("You sit on a rock, and ponder the mysteries of life\n")
 
@@ -92,21 +109,21 @@ class Characters(object):
 
 
 class EnemyCharacter(object):
-    def __init__(self):
+    def __init__(self, name, cur_health, skill_level, skill_fighting, items):
         Characters.__init__(self)
-        self.name = " "
-        self.cur_health = 1
-        self.skill_level = 1
-        self.skill_fighting = 1
-        self.item_list = {}
+        self.name = name
+        self.min_health = 1
+        self.cur_health = cur_health
+        self.skill_level = skill_level
+        self.skill_fighting = skill_fighting
+        self.item_list = items
 
-    @property
     def new_enemy(self):
-        self.name = "Small Goblin"
-        self.cur_health = randint(25, 100)
-        self.skill_level = randint(1, 5) * self.skill_fighting / 2
-        self.skill_fighting = randint(1, 5)
-        self.item_list = {"Goblin sword": 5}
+        self.name = self.name
+        self.cur_health = self.cur_health
+        self.skill_level = self.skill_level
+        self.skill_fighting = self.skill_fighting
+        self.item_list = self.item_list
         new_enemy = {"Name: ": self.name, "Health: ": self.cur_health, "Skill level: ": self.skill_level,
                      "Fight level: ": self.skill_fighting, "Items held: ": self.item_list}
         e_data_keys = new_enemy.keys()
@@ -119,7 +136,7 @@ class PlayerCharacter(object):
         Characters.__init__(self)
         self.name = " "
         self.min_health = 1
-        self.cur_health = 1
+        self.cur_health = 100
         self.max_health = 200
         self.state = "normal"
         self.skill_level = 1
@@ -128,33 +145,33 @@ class PlayerCharacter(object):
         self.skill_trading = 1
         self.item_list = {}
 
-    def new_player(self, level, c_level, f_level, s_level, i_list):
-        self.cur_health = 100
-        self.state = "normal"
-        self.skill_level = level
-        self.skill_crafting = c_level
-        self.skill_fighting = f_level
-        self.skill_trading = s_level
-        self.item_list = i_list
+    def new_player(self):
+        self.cur_health = self.cur_health
+        self.state = self.state
+        self.skill_level = self.skill_level
+        self.skill_crafting = self.skill_crafting
+        self.skill_fighting = self.skill_fighting
+        self.skill_trading = self.skill_trading
+        self.item_list = self.item_list
         return self.name, self.cur_health, self.state, self.skill_trading, self.item_list
 
 
 class Dice(object):
     def __init__(self):
         Characters.__init__(self)
-        self.player_roll = randint(2, 12)
-        self.enemy_roll = randint(1, 2)
+        self.player_roll = randint(1, 6)
+        self.enemy_roll = randint(1, 6)
 
     def roll_result(self):
         return self.player_roll, self.enemy_roll
 
     def roll_comparison(self):
         if self.player_roll > self.enemy_roll:
-            return True
+            return "attack"
         elif self.player_roll < self.enemy_roll:
-            return False
+            return "defend"
         else:
-            return "tie"
+            return "draw"
 
 
 class PlayerInput:
