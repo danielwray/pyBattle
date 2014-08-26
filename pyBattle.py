@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__Version__ = '0.0.2'
+__Version__ = '0.0.3'
 __status__ = 'Prototype'
 
 '''
@@ -18,7 +18,7 @@ class Characters(object):
     Contains properties of game characters (character objects)
     - name, health stats, state, levels, items...
     contains character related functions
-    - character_health, states (normal, fighting, crafting et al), character creations...
+    - character_health, states (normal, fighting, crafting et al), character creation...
     """
 
     def __init__(self):
@@ -35,20 +35,22 @@ class Characters(object):
 
     def game_state(self, new_state):
         self.state = new_state
-        if self.state == "normal":
-            print(" ")
+        if self.state == " ":
+            print("...\n")
 
         elif self.state == "fight":
             fight_active = True
             battling = True
             p_character = PlayerCharacter()
             e_character = EnemyCharacter("Goblin", randint(10, 100), randint(1, 3), randint(1, 3),
-                                         {"Sword": "A badly made goblin sword, made from old iron."})
+                                         {"Sword": "A badly forged goblin sword, made from old iron."})
 
             enemy_stats = e_character.new_enemy()
             print("You stumble upon an fierce {0}\n".format(e_character.name))
             for i in sorted(enemy_stats):
                 print(i, enemy_stats[i])
+
+            print(p_character.name, p_character.cur_health)
 
             player_health = p_character.cur_health
             enemy_health = e_character.cur_health
@@ -103,10 +105,6 @@ class Characters(object):
         else:
             print("You sit on a rock, and ponder the mysteries of life\n")
 
-    def create_player(self, player_name):
-        self.name = player_name
-        return PlayerCharacter.new_player(self)
-
 
 class EnemyCharacter(object):
     def __init__(self, name, cur_health, skill_level, skill_fighting, items):
@@ -134,6 +132,10 @@ class EnemyCharacter(object):
 class PlayerCharacter(object):
     def __init__(self):
         Characters.__init__(self)
+        #if name is None:
+        #    self.name = self.name
+        #else:
+        #    self.name = input("Your name? ")
         self.name = " "
         self.min_health = 1
         self.cur_health = 100
@@ -146,6 +148,7 @@ class PlayerCharacter(object):
         self.item_list = {}
 
     def new_player(self):
+        self.name = self.name
         self.cur_health = self.cur_health
         self.state = self.state
         self.skill_level = self.skill_level
@@ -153,7 +156,11 @@ class PlayerCharacter(object):
         self.skill_fighting = self.skill_fighting
         self.skill_trading = self.skill_trading
         self.item_list = self.item_list
-        return self.name, self.cur_health, self.state, self.skill_trading, self.item_list
+        new_player = {"Name: ": self.name, "Health: ": self.cur_health, "Level: ": self.skill_level,
+                      "items: ": self.item_list}
+        p_data_keys = new_player.keys()
+        p_data_values = new_player.values()
+        return new_player
 
 
 class Dice(object):
@@ -185,6 +192,15 @@ class PlayerInput:
 def main():
     game_active = True
     char_obj = Characters()
+    init_game = input("Type 'new game' to start a new game: ")
+
+    if init_game == "new game":
+        print("Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n")
+        print("Make a character, battle monsters, capture goodies, craft items.\n")
+
+    else:
+        print("I've always wanted to be a lumberjack.")
+        exit()
 
     while game_active:
         command = PlayerInput.input_parser()
