@@ -3,7 +3,6 @@
 __Version__ = '0.0.2'
 __status__ = 'Prototype'
 
-
 '''
 pyBattle refactor
 The code became to much of a mess - I couldn't take it anymore
@@ -37,7 +36,7 @@ class Characters(object):
     def damage(self, target):
         pass
 
-    def status(self, new_state):
+    def game_state(self, new_state):
         self.state = new_state
         if self.state == "normal":
             print("The situation doesn't require any thought")
@@ -94,27 +93,28 @@ class PlayerCharacter(object):
 
 
 class PlayerInput(object):
-    def __init__(self, string):
-        assert isinstance(string, str)
-        self.player_input = string
-
-    def input_parser(self):
-        player_output = self.player_input
+    def input_parser():
+        player_input = input("~> ")
+        player_output = player_input
         return player_output.lower()
 
 
 def main():
-    create_player = Characters()
-    player_change_state = Characters()
-    player_input = PlayerInput(input("--> "))
+    game_active = True
+    char_obj = Characters()
 
-    if player_input.input_parser() == " ":
-        print(player_change_state.status(input("Choose a state: ")))
-    else:
-        pass
-        print(create_player.create_player())
-
-
+    while game_active:
+        command = PlayerInput.input_parser()
+        if command == "menu":
+            print("Select a game mode: rest, fight, craft, trade.\n")
+            char_obj.game_state(PlayerInput.input_parser())
+        elif command == "help?":
+            print(" insert game help here - read from file...")
+        elif command == "quit":
+            print("Goodbye")
+            return False
+        else:
+            print("For a list of commands type 'help?'")
 
 if __name__ == "__main__":
     main()
