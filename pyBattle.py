@@ -17,10 +17,13 @@ class Characters(object):
     def __init__(self):
         self.name = " "
         self.min_health = 1
-        self.current_health = 1
+        self.cur_health = 1
         self.max_health = 200
-        # states - normal, fighting, resting, crafting, trading
-        self.state = "normal"
+        self.state = " "
+        self.skill_level = 1
+        self.skill_crafting = 1
+        self.skill_fighting = 1
+        self.skill_trading = 1
 
     def damage(self, target):
         pass
@@ -31,6 +34,7 @@ class Characters(object):
             print("The situation doesn't require any thought")
         elif self.state == "fight":
             print("An enemy appears out of the mist")
+            self.name = "Crazy one-eyed Goblin King"
             return EnemyCharacter.new_enemy(self)
         elif self.state == "resting":
             print("You sit and rest for a moment; the sun beams down and you feel well")
@@ -50,23 +54,34 @@ class EnemyCharacter(object):
     def __init__(self):
         Characters.__init__(self)
         self.name = " "
-        self.current_health = randint(25, 100)
-        self.state = " "
+        self.cur_health = 1
+        self.skill_level = 1
+        self.skill_fighting = 1
 
     def new_enemy(self):
-        return self.name, self.current_health, self.state
+        self.cur_health = randint(25, 100)
+        self.skill_level = randint(1, 5)
+        self.skill_fighting = randint(1, 5)
+        return self.name, self.cur_health, self.skill_level, self.skill_fighting
 
 
 class PlayerCharacter(object):
     def __init__(self):
         Characters.__init__(self)
-        self.name = self.name
-        self.current_health = 100
+        self.name = " "
+        self.min_health = 1
+        self.cur_health = 1
+        self.max_health = 200
         self.state = "normal"
+        self.skill_level = 1
+        self.skill_crafting = 1
+        self.skill_fighting = 1
+        self.skill_trading = 1
 
     def new_player(self):
-        self.current_health = 100
-        return self.name, self.current_health, self.state
+        self.cur_health = 100
+        self.state = "normal"
+        return self.name, self.cur_health, self.state, self.skill_trading
 
 
 def main():
@@ -74,7 +89,12 @@ def main():
     player_change_state = Characters()
     player_input = input("->> ")
 
-    print(create_player.create_player(player_input))
+    if player_input == "stat":
+        player_input = input("->>")
+        print(player_change_state.status(player_input))
+    else:
+        player_input = input("->>")
+        print(create_player.create_player(player_input))
 
 if __name__ == "__main__":
     main()
