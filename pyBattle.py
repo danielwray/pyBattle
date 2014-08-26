@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-__Version__ = '0.0.1'
+__Version__ = '0.0.2'
 __status__ = 'Prototype'
 
 
-''' pyBattle refactor
-
-    The code became to much of a mess - I couldn't take it anymore
+'''
+pyBattle refactor
+The code became to much of a mess - I couldn't take it anymore
 '''
 
 from random import randint
@@ -14,6 +14,14 @@ from random import randint
 
 # classes
 class Characters(object):
+    """
+    Character class
+    Contains properties of game characters (character objects)
+    - name, health stats, state, levels, items...
+    contains character related functions
+    - damage, states (normal, fighting, crafting et al), character creations...
+    """
+
     def __init__(self):
         self.name = " "
         self.min_health = 1
@@ -24,6 +32,7 @@ class Characters(object):
         self.skill_crafting = 1
         self.skill_fighting = 1
         self.skill_trading = 1
+        self.item_list = {"sword": "An iron sword"}
 
     def damage(self, target):
         pass
@@ -84,17 +93,28 @@ class PlayerCharacter(object):
         return self.name, self.cur_health, self.state, self.skill_trading
 
 
+class PlayerInput(object):
+    def __init__(self, string):
+        assert isinstance(string, str)
+        self.player_input = string
+
+    def input_parser(self):
+        player_output = self.player_input
+        return player_output.lower()
+
+
 def main():
     create_player = Characters()
     player_change_state = Characters()
-    player_input = input("->> ")
+    player_input = PlayerInput(input("--> "))
 
-    if player_input == "stat":
-        player_input = input("->>")
-        print(player_change_state.status(player_input))
+    if player_input.input_parser() == " ":
+        print(player_change_state.status(input("Choose a state: ")))
     else:
-        player_input = input("->>")
-        print(create_player.create_player(player_input))
+        pass
+        print(create_player.create_player())
+
+
 
 if __name__ == "__main__":
     main()
