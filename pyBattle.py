@@ -13,7 +13,7 @@ from random import randint
 
 
 # classes
-class CharacterStats:
+class Characters:
     def __init__(self):
         self.name = " "
         self.min_health = 1
@@ -27,7 +27,7 @@ class CharacterStats:
 
     def new_character(self, type):
         if type == "enemy":
-            enemy_name = ""
+            enemy_name = self.name
             enemy_current_health = self.current_health
             enemy_state = self.state
             return enemy_name, enemy_current_health, enemy_state
@@ -40,7 +40,7 @@ class CharacterStats:
             return "Some kind of awful creature has spawned forth and leaped into the infinite pit of doom"
 
 def main():
-    new_character = CharacterStats()
+    new_character = Characters()
     character_type = input("player or enemy? ")
 
     print(new_character.new_character(character_type))
