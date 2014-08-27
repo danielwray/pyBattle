@@ -149,29 +149,29 @@ class Battle(object):
         battling = True
         p_character = PlayerCharacter()
         e_character = EnemyCharacter()
-
-        print("You stumble upon a fierce {0}\n".format(e_character.name))
-
         p_health = p_character.player_health
         p_min_health = p_character.min_health
         e_health = e_character.enemy_health
         e_min_health = e_character.min_health
+        dice_roll = Dice()
+
+        print("You stumble upon a fierce {0}\n".format(e_character.name))
 
         # NOTE: Deep if/ else structure, should this be separated out into functions?
+        # Old fight system
         while fight_active:
-            dice_roll = Dice()
             print("Do you wish to fight, or try to run? ")
             command = PlayerInput.input_parser()
             if command == "fight":
-                print("You secure your armour, draw your weapon, and give pray to the gods...")
                 while battling:
                     if dice_roll.roll_comparison() == "attack":
-                        print("Attacking\n")
+                        print("Player Attacking\n")
                         player_damage = p_character.skill_fighting * randint(1, 10)
                         e_health -= player_damage
-                        print(player_damage)
-                        print("The enemy has {0} health remaining\n".format(e_health))
+                        print("Player attack: {0}".format(player_damage))
                         if e_health <= e_min_health:
+                            e_health = 0
+                            print("{0} Enemy health points remaining\n".format(e_health))
                             print("You win\n")
                             return False
                         else:
@@ -180,10 +180,11 @@ class Battle(object):
                         print("Enemy Attacking\n")
                         enemy_damage = e_character.skill_fighting * randint(1, 10)
                         p_health -= enemy_damage
-                        print(enemy_damage)
-                        print("You have {0} health remaining".format(p_health))
+                        print("Enemy attack: {0} points of damage".format(enemy_damage))
                         if p_health <= p_min_health:
-                            print("You lost\n")
+                            p_health = 0
+                            print("{0} player health points remaining\n".format(p_health))
+                            print("You lose\n")
                             return False
                         else:
                             break
@@ -231,6 +232,7 @@ def main():
     if init_game == "new game":
         print("Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n")
         print("Make a character, battle monsters, capture goodies, craft items.\n")
+        print("type 'menu' to bring up the available activities.\n")
     else:
         print("I've always wanted to be a lumberjack.")
         exit()
