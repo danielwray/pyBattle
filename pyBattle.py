@@ -17,7 +17,7 @@ class Characters(object):
     Character class
     Contains properties of game characters (character objects)
     - name, health stats, state, levels, items...
-    contains character related functions
+    contains character related actions
     - character_health, states (normal, fighting, crafting et al), character creation...
     """
 
@@ -39,55 +39,8 @@ class Characters(object):
             print("...\n")
 
         elif self.state == "fight":
-            fight_active = True
-            battling = True
-            p_character = PlayerCharacter()
-            e_character = EnemyCharacter()
-
-            print("You stumble upon a fierce {0}\n".format(e_character.name))
-
-            p_health = p_character.player_health
-            p_min_health = p_character.min_health
-            e_health = e_character.enemy_health
-            e_min_health = e_character.min_health
-
-            while fight_active:
-                dice_roll = Dice()
-                print("Do you wish to fight, or try to run? ")
-                command = PlayerInput.input_parser()
-                if command == "fight":
-                    print("You secure your armour, draw your weapon, and give pray to the gods...")
-                    while battling:
-                        if dice_roll.roll_comparison() == "attack":
-                            print("Attacking\n")
-                            player_damage = p_character.skill_fighting * randint(1, 10)
-                            e_health -= player_damage
-                            print(player_damage)
-                            print("The enemy has {0} health remaining\n".format(e_health))
-                            if e_health <= e_min_health:
-                                print("You win\n")
-                                return False
-                            else:
-                                break
-                        elif dice_roll.roll_comparison() == "defend":
-                            print("Enemy Attacking\n")
-                            enemy_damage = e_character.skill_fighting * randint(1, 10)
-                            p_health -= enemy_damage
-                            print(enemy_damage)
-                            print("You have {0} health remaining".format(p_health))
-                            if p_health <= p_min_health:
-                                print("You lost\n")
-                                return False
-                            else:
-                                break
-                        elif dice_roll.roll_comparison() == "draw":
-                            print("You both miss")
-                            break
-                elif command == "run":
-                    print("You realise you cannot win and try to run...")
-                    return False
-                else:
-                    print("You stand still, awestruck by your opponent...")
+            new_battle = Battle()
+            new_battle.battle_active()
 
         elif self.state == "rest":
             rest_active = True
@@ -124,7 +77,6 @@ class EnemyCharacter(object):
     def enemy_cur_health(self):
         self.enemy_health = self.enemy_health
         return self.enemy_health
-
 
 
 class PlayerCharacter(object):
@@ -186,9 +138,62 @@ class PlayerCharacter(object):
         return "lorem ipsum"
 
 
+class Battle(object):
+
+    def battle_active(self):
+        fight_active = True
+        battling = True
+        p_character = PlayerCharacter()
+        e_character = EnemyCharacter()
+
+        print("You stumble upon a fierce {0}\n".format(e_character.name))
+
+        p_health = p_character.player_health
+        p_min_health = p_character.min_health
+        e_health = e_character.enemy_health
+        e_min_health = e_character.min_health
+
+        while fight_active:
+            dice_roll = Dice()
+            print("Do you wish to fight, or try to run? ")
+            command = PlayerInput.input_parser()
+            if command == "fight":
+                print("You secure your armour, draw your weapon, and give pray to the gods...")
+                while battling:
+                    if dice_roll.roll_comparison() == "attack":
+                        print("Attacking\n")
+                        player_damage = p_character.skill_fighting * randint(1, 10)
+                        e_health -= player_damage
+                        print(player_damage)
+                        print("The enemy has {0} health remaining\n".format(e_health))
+                        if e_health <= e_min_health:
+                            print("You win\n")
+                            return False
+                        else:
+                            break
+                    elif dice_roll.roll_comparison() == "defend":
+                        print("Enemy Attacking\n")
+                        enemy_damage = e_character.skill_fighting * randint(1, 10)
+                        p_health -= enemy_damage
+                        print(enemy_damage)
+                        print("You have {0} health remaining".format(p_health))
+                        if p_health <= p_min_health:
+                            print("You lost\n")
+                            return False
+                        else:
+                            break
+                    elif dice_roll.roll_comparison() == "draw":
+                        print("You both miss")
+                        break
+            elif command == "run":
+                print("You realise you cannot win and try to run...")
+                return False
+            else:
+                print("You stand still, awestruck by your opponent...")
+
+
 class Dice(object):
     def __init__(self):
-        Characters.__init__(self)
         self.player_roll = randint(1, 6)
         self.enemy_roll = randint(1, 6)
 
