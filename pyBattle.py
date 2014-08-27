@@ -41,8 +41,8 @@ class Characters(object):
         elif self.state == "fight":
             fight_active = True
             battling = True
-            p_character = PlayerCharacter()
-            e_character = EnemyCharacter("Goblin", randint(10, 100), randint(1, 3), randint(1, 3),
+            p_character = PlayerCharacter("derp", 100, 1, 2, 2)
+            e_character = EnemyCharacter("Goblin", randint(10, 125), randint(1, 3), randint(1, 3),
                                          {"Sword": "A badly forged goblin sword, made from old iron."})
 
             enemy_stats = e_character.new_enemy()
@@ -50,11 +50,10 @@ class Characters(object):
             for i in sorted(enemy_stats):
                 print(i, enemy_stats[i])
 
-            print(p_character.name, p_character.cur_health)
-
-            player_health = p_character.cur_health
-            enemy_health = e_character.cur_health
-            enemy_min_health = e_character.min_health
+            p_health = p_character.player_health
+            p_min_health = p_character.min_health
+            e_health = e_character.cur_health
+            e_min_health = e_character.min_health
 
             while fight_active:
                 dice_roll = Dice()
@@ -65,18 +64,18 @@ class Characters(object):
                     while battling:
                         if dice_roll.roll_comparison() == "attack":
                             print("Attacking\n")
-                            enemy_health -= p_character.skill_fighting * randint(1, 6)
-                            print("The enemy has {0} health remaining".format(enemy_health))
-                            if enemy_health <= enemy_min_health:
+                            e_health -= p_character.skill_fighting * randint(1, 6)
+                            print("The enemy has {0} health remaining\n".format(e_health))
+                            if e_health <= e_min_health:
                                 print("You win\n")
                                 return False
                             else:
                                 break
                         elif dice_roll.roll_comparison() == "defend":
                             print("Enemy Attacking\n")
-                            player_health -= e_character.skill_fighting * randint(1, 6)
-                            print("You have {0} health remaining".format(enemy_health))
-                            if player_health <= 1:
+                            p_health
+                            print("You have {0} health remaining".format(p_health))
+                            if p_health <= p_min_health:
                                 print("You lost\n")
                                 return False
                             else:
@@ -117,11 +116,6 @@ class EnemyCharacter(object):
         self.item_list = items
 
     def new_enemy(self):
-        self.name = self.name
-        self.cur_health = self.cur_health
-        self.skill_level = self.skill_level
-        self.skill_fighting = self.skill_fighting
-        self.item_list = self.item_list
         new_enemy = {"Name: ": self.name, "Health: ": self.cur_health, "Skill level: ": self.skill_level,
                      "Fight level: ": self.skill_fighting, "Items held: ": self.item_list}
         e_data_keys = new_enemy.keys()
@@ -130,32 +124,26 @@ class EnemyCharacter(object):
 
 
 class PlayerCharacter(object):
-    def __init__(self):
-        Characters.__init__(self)
-        #if name is None:
-        #    self.name = self.name
-        #else:
-        #    self.name = input("Your name? ")
-        self.name = " "
+    def __init__(self, name, s_level, c_level, f_level, t_level):
+        #Characters.__init__(self)
+        self.name = name
         self.min_health = 1
         self.cur_health = 100
         self.max_health = 200
         self.state = "normal"
-        self.skill_level = 1
-        self.skill_crafting = 1
-        self.skill_fighting = 1
-        self.skill_trading = 1
-        self.item_list = {}
+        self.skill_level = s_level
+        self.skill_crafting = c_level
+        self.skill_fighting = f_level
+        self.skill_trading = t_level
+        self.item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
 
-    def new_player(self):
-        self.name = self.name
-        self.cur_health = self.cur_health
-        self.state = self.state
-        self.skill_level = self.skill_level
-        self.skill_crafting = self.skill_crafting
-        self.skill_fighting = self.skill_fighting
-        self.skill_trading = self.skill_trading
-        self.item_list = self.item_list
+    @property
+    def player_health(self):
+        enemy_damage = EnemyCharacter()
+        self.cur_health -= enemy_damage.skill_fighting + 10
+        return self.cur_health
+
+    def player(self):
         new_player = {"Name: ": self.name, "Health: ": self.cur_health, "Level: ": self.skill_level,
                       "items: ": self.item_list}
         p_data_keys = new_player.keys()
@@ -191,18 +179,17 @@ class PlayerInput:
 
 def main():
     game_active = True
-    char_obj = Characters()
     init_game = input("Type 'new game' to start a new game: ")
 
     if init_game == "new game":
         print("Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n")
         print("Make a character, battle monsters, capture goodies, craft items.\n")
-
     else:
         print("I've always wanted to be a lumberjack.")
         exit()
 
     while game_active:
+        char_obj = Characters()
         command = PlayerInput.input_parser()
         if command == "menu":
             print("Select a game mode: rest, fight, craft, trade.\n")
