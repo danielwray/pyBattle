@@ -41,18 +41,14 @@ class Characters(object):
         elif self.state == "fight":
             fight_active = True
             battling = True
-            p_character = PlayerCharacter("derp", 100, 1, 2, 2)
-            e_character = EnemyCharacter("Goblin", randint(10, 125), randint(1, 3), randint(1, 3),
-                                         {"Sword": "A badly forged goblin sword, made from old iron."})
+            p_character = PlayerCharacter()
+            e_character = EnemyCharacter()
 
-            enemy_stats = e_character.new_enemy()
-            print("You stumble upon an fierce {0}\n".format(e_character.name))
-            for i in sorted(enemy_stats):
-                print(i, enemy_stats[i])
+            print("You stumble upon a fierce {0}\n".format(e_character.name))
 
             p_health = p_character.player_health
             p_min_health = p_character.min_health
-            e_health = e_character.cur_health
+            e_health = e_character.enemy_health
             e_min_health = e_character.min_health
 
             while fight_active:
@@ -64,7 +60,9 @@ class Characters(object):
                     while battling:
                         if dice_roll.roll_comparison() == "attack":
                             print("Attacking\n")
-                            e_health -= p_character.skill_fighting * randint(1, 6)
+                            player_damage = p_character.skill_fighting * randint(1, 10)
+                            e_health -= player_damage
+                            print(player_damage)
                             print("The enemy has {0} health remaining\n".format(e_health))
                             if e_health <= e_min_health:
                                 print("You win\n")
@@ -73,7 +71,9 @@ class Characters(object):
                                 break
                         elif dice_roll.roll_comparison() == "defend":
                             print("Enemy Attacking\n")
-                            p_health
+                            enemy_damage = e_character.skill_fighting * randint(1, 10)
+                            p_health -= enemy_damage
+                            print(enemy_damage)
                             print("You have {0} health remaining".format(p_health))
                             if p_health <= p_min_health:
                                 print("You lost\n")
@@ -106,49 +106,84 @@ class Characters(object):
 
 
 class EnemyCharacter(object):
-    def __init__(self, name, cur_health, skill_level, skill_fighting, items):
+    def __init__(self):
         Characters.__init__(self)
-        self.name = name
+        self.name = self.name
         self.min_health = 1
-        self.cur_health = cur_health
-        self.skill_level = skill_level
-        self.skill_fighting = skill_fighting
-        self.item_list = items
+        self.enemy_health = 50
+        self.skill_level = 2
+        self.skill_fighting = 2
+        self.item_list = {}
 
-    def new_enemy(self):
-        new_enemy = {"Name: ": self.name, "Health: ": self.cur_health, "Skill level: ": self.skill_level,
-                     "Fight level: ": self.skill_fighting, "Items held: ": self.item_list}
-        e_data_keys = new_enemy.keys()
-        e_data_vals = new_enemy.values()
-        return new_enemy
+    @property
+    def enemy_name(self):
+        self.name = self.name
+        return self.name
+
+    @property
+    def enemy_cur_health(self):
+        self.enemy_health = self.enemy_health
+        return self.enemy_health
+
 
 
 class PlayerCharacter(object):
-    def __init__(self, name, s_level, c_level, f_level, t_level):
-        #Characters.__init__(self)
-        self.name = name
+    def __init__(self):
+        Characters.__init__(self)
+        self.name = self.name
         self.min_health = 1
-        self.cur_health = 100
+        self.cur_health = 50
         self.max_health = 200
         self.state = "normal"
-        self.skill_level = s_level
-        self.skill_crafting = c_level
-        self.skill_fighting = f_level
-        self.skill_trading = t_level
+        self.skill_level = self.skill_level
+        self.skill_crafting = self.skill_crafting
+        self.skill_fighting = self.skill_fighting
+        self.skill_trading = self.skill_trading
         self.item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
 
     @property
+    def player_name(self):
+        new_name = "Generic Hero"
+        assert isinstance(new_name, str)
+        self.name = new_name
+        return self.name
+
+    @property
+    def player_min_health(self):
+        return "min health working"
+
+    @property
     def player_health(self):
-        enemy_damage = EnemyCharacter()
-        self.cur_health -= enemy_damage.skill_fighting + 10
+        self.cur_health = self.cur_health
         return self.cur_health
 
-    def player(self):
-        new_player = {"Name: ": self.name, "Health: ": self.cur_health, "Level: ": self.skill_level,
-                      "items: ": self.item_list}
-        p_data_keys = new_player.keys()
-        p_data_values = new_player.values()
-        return new_player
+    @property
+    def player_max_health(self):
+        return "max health working"
+
+    @property
+    def player_state(self):
+        return "state is working"
+
+    @property
+    def player_skill_level(self):
+        return "player skill level working"
+
+    @property
+    def player_crafting_level(self):
+        return "lorem ipsum"
+
+    @property
+    def player_fighting_level(self):
+        return "lorem ipsum"
+
+    @property
+    def player_trading_level(self):
+        return "lorem ipsum"
+
+    @property
+    def player_item_list(self):
+        return "lorem ipsum"
 
 
 class Dice(object):
