@@ -12,6 +12,7 @@ from random import randint
 
 
 # classes
+# NOTE: This should be just character class, and a 'game' class should be made for the game state
 class Characters(object):
     """
     Character class
@@ -58,6 +59,7 @@ class Characters(object):
             print("You sit on a rock, and ponder the mysteries of life\n")
 
 
+# Note: I'm not even sure if this is how to use a class...
 class EnemyCharacter(object):
     def __init__(self):
         Characters.__init__(self)
@@ -79,6 +81,7 @@ class EnemyCharacter(object):
         return self.enemy_health
 
 
+# NOTE: Nor this. It doesn't seem to make very much sense.
 class PlayerCharacter(object):
     def __init__(self):
         Characters.__init__(self)
@@ -140,6 +143,7 @@ class PlayerCharacter(object):
 
 class Battle(object):
 
+    # NOTE: Should this be a function, rather than a class? Hmm...
     def battle_active(self):
         fight_active = True
         battling = True
@@ -153,6 +157,7 @@ class Battle(object):
         e_health = e_character.enemy_health
         e_min_health = e_character.min_health
 
+        # NOTE: Deep if/ else structure, should this be separated out into functions?
         while fight_active:
             dice_roll = Dice()
             print("Do you wish to fight, or try to run? ")
@@ -200,6 +205,7 @@ class Dice(object):
     def roll_result(self):
         return self.player_roll, self.enemy_roll
 
+    # NOTE: This looks terrible, a better function should be developed - It should take player skill as a var
     def roll_comparison(self):
         if self.player_roll > self.enemy_roll:
             return "attack"
@@ -209,6 +215,7 @@ class Dice(object):
             return "draw"
 
 
+# Note: This seems logical to have a class to call to process text input... But is it?
 class PlayerInput:
     @staticmethod
     def input_parser():
