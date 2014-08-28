@@ -18,8 +18,6 @@ class Characters(object):
     Character class
     Contains properties of game characters (character objects)
     - name, health stats, state, levels, items...
-    contains character related actions
-    - character_health, states (normal, fighting, crafting et al), character creation...
     """
 
     def __init__(self):
@@ -34,41 +32,21 @@ class Characters(object):
         self.skill_trading = 1
         self.item_list = {}
 
-    def game_state(self, new_state):
-        self.state = new_state
-        if self.state == " ":
-            print("...\n")
-
-        elif self.state == "fight":
-            new_battle = Battle()
-            new_battle.battle_active()
-
-        elif self.state == "rest":
-            rest_active = True
-            print("You sit and rest for a moment; the sun beams down and you feel well\n")
-
-        elif self.state == "craft":
-            craft_active = True
-            print("You pull out a hammer and start getting creative\n")
-
-        elif self.state == "trade":
-            trade_active = True
-            print("You put on your haggling hat and start looking for deals\n")
-
-        else:
-            print("You sit on a rock, and ponder the mysteries of life\n")
-
 
 # Note: I'm not even sure if this is how to use a class...
-class EnemyCharacter(object):
-    def __init__(self):
+class EnemyCharacter(Characters):
+    def __init__(self, enemy_name, enemy_health, enemy_level, enemy_fighting, enemy_items):
         Characters.__init__(self)
-        self.name = self.name
+        self.name = enemy_name
         self.min_health = 1
-        self.enemy_health = 50
-        self.skill_level = 2
-        self.skill_fighting = 2
-        self.item_list = {}
+        self.enemy_health = enemy_health
+        self.skill_level = enemy_level
+        self.skill_fighting = enemy_fighting
+        self.item_list = enemy_items
+
+
+    def enemy_data(self):
+        return {"Name": self.name}
 
     @property
     def enemy_name(self):
@@ -80,27 +58,30 @@ class EnemyCharacter(object):
         self.enemy_health = self.enemy_health
         return self.enemy_health
 
+    @property
+    def enemy_f_skill(self):
+        self.skill_fighting = self.skill_fighting
+        return self.skill_fighting
+
 
 # NOTE: Nor this. It doesn't seem to make very much sense.
-class PlayerCharacter(object):
-    def __init__(self):
+class PlayerCharacter(Characters):
+    def __init__(self, name, state, level, crafting, fighting, trading):
         Characters.__init__(self)
-        self.name = self.name
+        self.name = name
         self.min_health = 1
         self.cur_health = 50
         self.max_health = 200
-        self.state = "normal"
-        self.skill_level = self.skill_level
-        self.skill_crafting = self.skill_crafting
-        self.skill_fighting = self.skill_fighting
-        self.skill_trading = self.skill_trading
+        self.state = state
+        self.skill_level = level
+        self.skill_crafting = crafting
+        self.skill_fighting = fighting
+        self.skill_trading = trading
         self.item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
 
     @property
     def player_name(self):
-        new_name = "Generic Hero"
-        assert isinstance(new_name, str)
-        self.name = new_name
+        self.name = self.name
         return self.name
 
     @property
@@ -108,7 +89,7 @@ class PlayerCharacter(object):
         return "min health working"
 
     @property
-    def player_health(self):
+    def player_cur_health(self):
         self.cur_health = self.cur_health
         return self.cur_health
 
@@ -139,63 +120,6 @@ class PlayerCharacter(object):
     @property
     def player_item_list(self):
         return "lorem ipsum"
-
-
-class Battle(object):
-
-    # NOTE: Should this be a function, rather than a class? Hmm...
-    def battle_active(self):
-        fight_active = True
-        battling = True
-        p_character = PlayerCharacter()
-        e_character = EnemyCharacter()
-        p_health = p_character.player_health
-        p_min_health = p_character.min_health
-        e_health = e_character.enemy_health
-        e_min_health = e_character.min_health
-        dice_roll = Dice()
-
-        print("You stumble upon a fierce {0}\n".format(e_character.name))
-
-        # NOTE: Deep if/ else structure, should this be separated out into functions?
-        # Old fight system
-        while fight_active:
-            print("Do you wish to fight, or try to run? ")
-            command = PlayerInput.input_parser()
-            if command == "fight":
-                while battling:
-                    if dice_roll.roll_comparison() == "attack":
-                        print("Player Attacking\n")
-                        player_damage = p_character.skill_fighting * randint(1, 10)
-                        e_health -= player_damage
-                        print("Player attack: {0}".format(player_damage))
-                        if e_health <= e_min_health:
-                            e_health = 0
-                            print("{0} Enemy health points remaining\n".format(e_health))
-                            print("You win\n")
-                            return False
-                        else:
-                            break
-                    elif dice_roll.roll_comparison() == "defend":
-                        print("Enemy Attacking\n")
-                        enemy_damage = e_character.skill_fighting * randint(1, 10)
-                        p_health -= enemy_damage
-                        print("Enemy attack: {0} points of damage".format(enemy_damage))
-                        if p_health <= p_min_health:
-                            p_health = 0
-                            print("{0} player health points remaining\n".format(p_health))
-                            print("You lose\n")
-                            return False
-                        else:
-                            break
-                    elif dice_roll.roll_comparison() == "draw":
-                        print("You both miss")
-                        break
-            elif command == "run":
-                print("You realise you cannot win and try to run...")
-                return False
-            else:
-                print("You stand still, awestruck by your opponent...")
 
 
 class Dice(object):
@@ -232,17 +156,21 @@ def main():
     if init_game == "new game":
         print("Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n")
         print("Make a character, battle monsters, capture goodies, craft items.\n")
+        print("Enter your name")
+        player_name = input("~>")
+        player = PlayerCharacter(player_name, "state", 1, 1, 2, 1)
+        print("\nLet's get going {0}".format(player.player_name))
         print("type 'menu' to bring up the available activities.\n")
     else:
         print("I've always wanted to be a lumberjack.")
         exit()
 
     while game_active:
-        char_obj = Characters()
+        game_mode = game_state
         command = PlayerInput.input_parser()
         if command == "menu":
             print("Select a game mode: rest, fight, craft, trade.\n")
-            char_obj.game_state(PlayerInput.input_parser())
+            game_mode(PlayerInput.input_parser())
         elif command == "help?":
             print(" insert game help here - read from file...")
         elif command == "quit":
@@ -250,6 +178,34 @@ def main():
             return False
         else:
             print("For a list of commands type 'help?'")
+
+
+def game_state(state):
+    if state == " ":
+        print("...\n")
+
+    elif state == "fight":
+        fight_active = True
+        print("You are drawn into battle\n")
+        if randint(2, 4) > 2:
+            create_enemy = EnemyCharacter("Goblin", 25, 2, 3, {"Sword": "weapon", "shield": "weapon", 2: "Coins"})
+            print(create_enemy.enemy_data())
+
+    elif state == "rest":
+        rest_active = True
+        print("You sit and rest for a moment; the sun beams down and you feel well\n")
+
+    elif state == "craft":
+        craft_active = True
+        print("You pull out a hammer and start getting creative\n")
+
+    elif state == "trade":
+        trade_active = True
+        print("You put on your haggling hat and start looking for deals\n")
+
+    else:
+        print("You sit on a rock, and ponder the mysteries of life\n")
+
 
 
 if __name__ == "__main__":
