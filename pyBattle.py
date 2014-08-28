@@ -11,13 +11,11 @@ The code became to much of a mess - I couldn't take it anymore
 from random import randint
 
 
-# classes
-# NOTE: This should be just character class, and a 'game' class should be made for the game state
 class Characters(object):
     """
     Character class
     Contains properties of game characters (character objects)
-    - name, health stats, state, levels, items...
+    - name, health stats, state, levels, items
     """
 
     def __init__(self):
@@ -33,8 +31,13 @@ class Characters(object):
         self.item_list = {}
 
 
-# Note: I'm not even sure if this is how to use a class...
 class EnemyCharacter(Characters):
+    """
+    Character class
+        - EnemyCharacter class
+    Contains properties of enemy character (character object)
+    - name, health stats, levels, items
+    """
     def __init__(self, enemy_name, enemy_health, enemy_level, enemy_fighting, enemy_items):
         Characters.__init__(self)
         self.name = enemy_name
@@ -44,28 +47,18 @@ class EnemyCharacter(Characters):
         self.skill_fighting = enemy_fighting
         self.item_list = enemy_items
 
-
     def enemy_data(self):
-        return {"Name": self.name}
-
-    @property
-    def enemy_name(self):
-        self.name = self.name
-        return self.name
-
-    @property
-    def enemy_cur_health(self):
-        self.enemy_health = self.enemy_health
-        return self.enemy_health
-
-    @property
-    def enemy_f_skill(self):
-        self.skill_fighting = self.skill_fighting
-        return self.skill_fighting
+        e_data = dict(Name=self.name, Health=self.enemy_health, Level=self.skill_level, Items=self.item_list)
+        return dict.items(e_data)
 
 
-# NOTE: Nor this. It doesn't seem to make very much sense.
 class PlayerCharacter(Characters):
+    """
+    Character class
+        - PlayerCharacter class
+    Contains properties of player character (character object)
+    - name, health stats, state, levels, items
+    """
     def __init__(self, name, state, level, crafting, fighting, trading):
         Characters.__init__(self)
         self.name = name
@@ -79,50 +72,19 @@ class PlayerCharacter(Characters):
         self.skill_trading = trading
         self.item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
 
-    @property
-    def player_name(self):
-        self.name = self.name
-        return self.name
-
-    @property
-    def player_min_health(self):
-        return "min health working"
-
-    @property
-    def player_cur_health(self):
-        self.cur_health = self.cur_health
-        return self.cur_health
-
-    @property
-    def player_max_health(self):
-        return "max health working"
-
-    @property
-    def player_state(self):
-        return "state is working"
-
-    @property
-    def player_skill_level(self):
-        return "player skill level working"
-
-    @property
-    def player_crafting_level(self):
-        return "lorem ipsum"
-
-    @property
-    def player_fighting_level(self):
-        return "lorem ipsum"
-
-    @property
-    def player_trading_level(self):
-        return "lorem ipsum"
-
-    @property
-    def player_item_list(self):
-        return "lorem ipsum"
+    def player_data(self):
+        p_data = {"Name": self.name, "Health": self.cur_health, "State": self.state,
+                  "Level": self.skill_level, "Crafting": self.skill_crafting, "Fighting": self.skill_fighting,
+                  "Trading": self.skill_trading, "Items": self.item_list}
+        return p_data
 
 
-class Dice(object):
+class Die(object):
+    """
+    Die
+    Contains methods for Die class (Die object)
+    - roll_result (get random ints), roll_comparison(get random ints and determine winner)
+    """
     def __init__(self):
         self.player_roll = randint(1, 6)
         self.enemy_roll = randint(1, 6)
@@ -130,17 +92,18 @@ class Dice(object):
     def roll_result(self):
         return self.player_roll, self.enemy_roll
 
-    # NOTE: This looks terrible, a better function should be developed - It should take player skill as a var
     def roll_comparison(self):
         if self.player_roll > self.enemy_roll:
-            return "attack"
+            outcome = "Player wins"
+            return outcome
         elif self.player_roll < self.enemy_roll:
-            return "defend"
+            outcome = "Player loses"
+            return outcome
         else:
-            return "draw"
+            outcome = "Draw"
+            return outcome
 
 
-# Note: This seems logical to have a class to call to process text input... But is it?
 class PlayerInput:
     @staticmethod
     def input_parser():
@@ -156,11 +119,8 @@ def main():
     if init_game == "new game":
         print("Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n")
         print("Make a character, battle monsters, capture goodies, craft items.\n")
-        print("Enter your name")
-        player_name = input("~>")
-        player = PlayerCharacter(player_name, "state", 1, 1, 2, 1)
-        print("\nLet's get going {0}".format(player.player_name))
         print("type 'menu' to bring up the available activities.\n")
+
     else:
         print("I've always wanted to be a lumberjack.")
         exit()
@@ -188,8 +148,8 @@ def game_state(state):
         fight_active = True
         print("You are drawn into battle\n")
         if randint(2, 4) > 2:
-            create_enemy = EnemyCharacter("Goblin", 25, 2, 3, {"Sword": "weapon", "shield": "weapon", 2: "Coins"})
-            print(create_enemy.enemy_data())
+            new_enemy = (EnemyCharacter("Goblin", 25, 2, 3, {"Sword": "weapon", "shield": "weapon", 2: "Coins"}))
+            print("Battle: {0} \n vs \n {1} ".format(player.player_data(), new_enemy.enemy_data()))
 
     elif state == "rest":
         rest_active = True
@@ -207,6 +167,10 @@ def game_state(state):
         print("You sit on a rock, and ponder the mysteries of life\n")
 
 
-
 if __name__ == "__main__":
+    print("Enter your name")
+    player_name = input("~>")
+    print("\nLet's get going {0}".format(player_name))
+    player = PlayerCharacter(player_name, "state", 1, 1, 2, 1)
+
     main()
