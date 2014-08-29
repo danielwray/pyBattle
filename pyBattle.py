@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__Version__ = '0.0.3'
+__Version__ = '0.0.4'
 __status__ = 'Prototype'
 
 '''
@@ -64,7 +64,7 @@ class PlayerCharacter(Characters):
         self.name = name
         self.min_health = 1
         self.cur_health = 50
-        self.max_health = 200
+        self.max_health = 999
         self.state = state
         self.skill_level = level
         self.skill_crafting = crafting
@@ -73,10 +73,10 @@ class PlayerCharacter(Characters):
         self.item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
 
     def player_data(self):
-        p_data = {"Name": self.name, "Health": self.cur_health, "State": self.state,
-                  "Level": self.skill_level, "Crafting": self.skill_crafting, "Fighting": self.skill_fighting,
-                  "Trading": self.skill_trading, "Items": self.item_list}
-        return p_data
+        p_data = dict(Name=self.name, Health=self.cur_health, State=self.state, Level=self.skill_level,
+                      Crafting=self.skill_crafting, Fighting=self.skill_fighting, Trading=self.skill_trading,
+                      Items=self.item_list)
+        return dict.items(p_data)
 
 
 class Die(object):
@@ -120,7 +120,6 @@ def main():
         print("Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n")
         print("Make a character, battle monsters, capture goodies, craft items.\n")
         print("type 'menu' to bring up the available activities.\n")
-
     else:
         print("I've always wanted to be a lumberjack.")
         exit()
@@ -145,22 +144,18 @@ def game_state(state):
         print("...\n")
 
     elif state == "fight":
-        fight_active = True
         print("You are drawn into battle\n")
         if randint(2, 4) > 2:
-            new_enemy = (EnemyCharacter("Goblin", 25, 2, 3, {"Sword": "weapon", "shield": "weapon", 2: "Coins"}))
+            new_enemy = (EnemyCharacter("Goblin", 25, 2, 3, {"Sword": "_weapon_", "Shield": "_weapon_", 2: "_coin_"}))
             print("Battle: {0} \n vs \n {1} ".format(player.player_data(), new_enemy.enemy_data()))
 
     elif state == "rest":
-        rest_active = True
         print("You sit and rest for a moment; the sun beams down and you feel well\n")
 
     elif state == "craft":
-        craft_active = True
         print("You pull out a hammer and start getting creative\n")
 
     elif state == "trade":
-        trade_active = True
         print("You put on your haggling hat and start looking for deals\n")
 
     else:
@@ -172,5 +167,4 @@ if __name__ == "__main__":
     player_name = input("~>")
     print("\nLet's get going {0}".format(player_name))
     player = PlayerCharacter(player_name, "state", 1, 1, 2, 1)
-
     main()
