@@ -9,6 +9,7 @@ The code became to much of a mess - I couldn't take it anymore
 '''
 
 from random import randint
+from random import choice
 
 
 class Characters(object):
@@ -90,6 +91,7 @@ class Die(object):
     Contains methods for Die class (Die object)
     - roll_result (get random ints), roll_comparison(get random ints and determine winner)
     """
+
     def __init__(self):
         self.player_roll = randint(1, 6)
         self.enemy_roll = randint(1, 6)
@@ -151,7 +153,8 @@ def game_state(state):
     elif state == "fight":
         print("You are drawn into battle\n")
         if randint(2, 4) > 2:
-            new_enemy = EnemyCharacter("Goblin")
+            e_dat = enemy_data()
+            new_enemy = EnemyCharacter(e_dat)
             print("Battle: \n {0} \n vs \n {1} ".format(player.name, new_enemy.name))
 
     elif state == "rest":
@@ -165,6 +168,21 @@ def game_state(state):
 
     else:
         print("You sit on a rock, and ponder the mysteries of life\n")
+
+
+def enemy_data():
+    enemy_name_data = ["small goblin", "angry goblin", "warrior goblin", "berserk goblin", "king goblin",
+                       "mediocre orc", "slightly less mediocre, and more smelly orc", "orc leader", "thief",
+                       "escaped prisoner", "outlaw", "deserting soldier", "trained man-at-arms", "landed knight",
+                       "knight", "turnip"]
+    enemy_name_rand = choice(list(enemy_name_data))
+    enemy_health_data = randint(10, 200)
+    enemy_skill_data = randint(1, 10)
+    enemy_fighting_data = randint(1, 25)
+    enemy_item_data = {"example 1": "weapon", "example 2": "coin", "example 3": "clothing"}
+    enemy_item_rand = choice(list(enemy_item_data))
+
+    return enemy_name_rand, enemy_health_data, enemy_skill_data, enemy_fighting_data, enemy_item_rand
 
 
 if __name__ == "__main__":
