@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-__Version__ = '0.0.4'
+__Version__ = '0.0.5'
 __status__ = 'Prototype'
 
 '''
@@ -99,9 +99,13 @@ class Die(object):
         pass
 
     def roll_result(self):
-        return "Player rolled: {0} \nEnemy rolled: {1}".format(self.player_roll, self.enemy_roll)
+        self.player_roll = randint(1, 6)
+        self.enemy_roll = randint(1, 6)
+        return "Player rolled: {0} Enemy rolled: {1}".format(self.player_roll, self.enemy_roll)
 
     def roll_comparison(self):
+        self.player_roll = randint(1, 6)
+        self.enemy_roll = randint(1, 6)
         if self.player_roll > self.enemy_roll:
             outcome = 0
             return outcome
@@ -153,7 +157,7 @@ def game_state(state):
         print("...\n")
 
     elif state == "fight":
-        print("You are drawn into battle\n")
+        print("You are drawn into battle!\n")
         battle_active = True
         e_dat = enemy_data()
         new_enemy = EnemyCharacter(e_dat)
@@ -163,23 +167,23 @@ def game_state(state):
         p_counter = 0
         e_counter = 0
 
-        print("Battle: \n{0} \nvs \na {1} ".format(player.name, new_enemy.name))
+        print("Battle: \n{0} \nvs \na {1}\n".format(player.name, new_enemy.name))
 
         while battle_active:
             roll_data = roll.roll_comparison()
-            if p_counter > 10:
+            if p_counter > 5:
                 delay.sleep(1)
-                print("{0} wins battle".format(player.name))
+                print("\n{0} wins the battle.\n".format(player.name))
                 return False
-            elif e_counter > 10:
+            elif e_counter > 5:
                 delay.sleep(1)
-                print("{0} wins battle".format(new_enemy.name))
+                print("\n{0} wins the battle.\n".format(new_enemy.name))
                 return False
             else:
                 if roll_data == 0:
                     delay.sleep(1)
                     print(roll.roll_result())
-                    print("Player wins throw")
+                    print("Player wins throw.\n")
                     move_counter += 1
                     if move_counter == 10:
                         return False
@@ -189,7 +193,7 @@ def game_state(state):
                 elif roll_data == 1:
                     delay.sleep(1)
                     print(roll.roll_result())
-                    print("enemy wins throw")
+                    print("Enemy wins throw.\n")
                     e_counter += 1
                     move_counter += 1
                     if move_counter == 10:
@@ -200,7 +204,7 @@ def game_state(state):
                 else:
                     delay.sleep(1)
                     print(roll.roll_result())
-                    print("draw")
+                    print("Draw!\n")
                     move_counter += 1
                     if move_counter == 10:
                         return False
@@ -210,6 +214,11 @@ def game_state(state):
     elif state == "rest":
         print("You sit and rest for a moment; the sun beams down and you feel well\n")
         print("Your current health level is {0}".format(player.cur_health))
+        cheat = input("Type 'gimme' to increase health by 10 points: ")
+        if cheat == "gimme":
+            player.cur_health += 10
+        else:
+            print("Uh oh!")
 
     elif state == "craft":
         print("You pull out a hammer and start getting creative\n")
