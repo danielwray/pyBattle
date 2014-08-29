@@ -92,16 +92,13 @@ class Die(object):
     Contains methods for Die class (Die object)
     - roll_result (get random ints), roll_comparison(get random ints and determine winner)
     """
-    player_roll = randint(1, 6)
-    enemy_roll = randint(1, 6)
 
     def __init__(self):
-        pass
-
-    def roll_result(self):
         self.player_roll = randint(1, 6)
         self.enemy_roll = randint(1, 6)
-        return "Player rolled: {0} Enemy rolled: {1}".format(self.player_roll, self.enemy_roll)
+
+    def roll_result(self):
+        return "{0} rolled: {1} | Enemy rolled: {2}".format(player.name, self.player_roll, self.enemy_roll)
 
     def roll_comparison(self):
         self.player_roll = randint(1, 6)
@@ -112,9 +109,11 @@ class Die(object):
         elif self.player_roll < self.enemy_roll:
             outcome = 1
             return outcome
-        else:
+        elif self.player_roll == self.enemy_roll:
             outcome = 2
             return outcome
+        else:
+            return "Error rolling die!"
 
 
 class PlayerInput:
@@ -163,7 +162,7 @@ def game_state(state):
         new_enemy = EnemyCharacter(e_dat)
         roll = Die()
         delay = time
-        move_counter = 0
+        d_counter = 0
         p_counter = 0
         e_counter = 0
 
@@ -171,45 +170,41 @@ def game_state(state):
 
         while battle_active:
             roll_data = roll.roll_comparison()
-            if p_counter > 5:
+            if p_counter == 3:
                 delay.sleep(1)
                 print("\n{0} wins the battle.\n".format(player.name))
                 return False
-            elif e_counter > 5:
+            elif e_counter == 3:
                 delay.sleep(1)
-                print("\n{0} wins the battle.\n".format(new_enemy.name))
+                print("\nThe {0} wins the battle.\n".format(new_enemy.name))
+                return False
+            elif d_counter == 3:
+                delay.sleep(1)
+                print("Draw!")
                 return False
             else:
                 if roll_data == 0:
                     delay.sleep(1)
                     print(roll.roll_result())
-                    print("Player wins throw.\n")
-                    move_counter += 1
-                    if move_counter == 10:
-                        return False
-                    else:
-                        p_counter += 1
-                        pass
+                    print("Attacking\n")
+                    new_enemy.cur_health -= player.skill_fighting
+                    print(new_enemy.cur_health)
+                    p_counter += 1
+                    pass
                 elif roll_data == 1:
                     delay.sleep(1)
                     print(roll.roll_result())
-                    print("Enemy wins throw.\n")
+                    print("Defending\n")
+                    player.cur_health -= new_enemy.skill_fighting
+                    print(player.cur_health)
                     e_counter += 1
-                    move_counter += 1
-                    if move_counter == 10:
-                        return False
-                    else:
-                        e_counter += 1
-                        pass
+                    pass
                 else:
                     delay.sleep(1)
                     print(roll.roll_result())
                     print("Draw!\n")
-                    move_counter += 1
-                    if move_counter == 10:
-                        return False
-                    else:
-                        pass
+                    d_counter += 1
+                    pass
 
     elif state == "rest":
         print("You sit and rest for a moment; the sun beams down and you feel well\n")
@@ -232,6 +227,7 @@ def game_state(state):
         print("You sit on a rock, and ponder the mysteries of life\n")
 
 
+# make this into a class so I can call the separate data returns to enter into enemy instances.
 def enemy_data():
     enemy_name_data = ["small goblin", "angry goblin", "warrior goblin", "berserk goblin", "king goblin",
                        "mediocre orc", "slightly less mediocre, and more smelly orc", "orc leader", "thief",
