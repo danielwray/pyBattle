@@ -10,6 +10,7 @@ The code became to much of a mess - I couldn't take it anymore
 
 from random import randint
 from random import choice
+import time
 
 
 class Characters(object):
@@ -91,23 +92,24 @@ class Die(object):
     Contains methods for Die class (Die object)
     - roll_result (get random ints), roll_comparison(get random ints and determine winner)
     """
+    player_roll = randint(1, 6)
+    enemy_roll = randint(1, 6)
 
     def __init__(self):
-        self.player_roll = randint(1, 6)
-        self.enemy_roll = randint(1, 6)
+        pass
 
     def roll_result(self):
-        return self.player_roll, self.enemy_roll
+        return "Player rolled: {0} \nEnemy rolled: {1}".format(self.player_roll, self.enemy_roll)
 
     def roll_comparison(self):
         if self.player_roll > self.enemy_roll:
-            outcome = "Player wins"
+            outcome = 0
             return outcome
         elif self.player_roll < self.enemy_roll:
-            outcome = "Player loses"
+            outcome = 1
             return outcome
         else:
-            outcome = "Draw"
+            outcome = 2
             return outcome
 
 
@@ -152,19 +154,70 @@ def game_state(state):
 
     elif state == "fight":
         print("You are drawn into battle\n")
-        if randint(2, 4) > 2:
-            e_dat = enemy_data()
-            new_enemy = EnemyCharacter(e_dat)
-            print("Battle: \n {0} \n vs \n {1} ".format(player.name, new_enemy.name))
+        battle_active = True
+        e_dat = enemy_data()
+        new_enemy = EnemyCharacter(e_dat)
+        roll = Die()
+        delay = time
+        move_counter = 0
+        p_counter = 0
+        e_counter = 0
+
+        print("Battle: \n{0} \nvs \na {1} ".format(player.name, new_enemy.name))
+
+        while battle_active:
+            roll_data = roll.roll_comparison()
+            if p_counter > 10:
+                delay.sleep(1)
+                print("{0} wins battle".format(player.name))
+                return False
+            elif e_counter > 10:
+                delay.sleep(1)
+                print("{0} wins battle".format(new_enemy.name))
+                return False
+            else:
+                if roll_data == 0:
+                    delay.sleep(1)
+                    print(roll.roll_result())
+                    print("Player wins throw")
+                    move_counter += 1
+                    if move_counter == 10:
+                        return False
+                    else:
+                        p_counter += 1
+                        pass
+                elif roll_data == 1:
+                    delay.sleep(1)
+                    print(roll.roll_result())
+                    print("enemy wins throw")
+                    e_counter += 1
+                    move_counter += 1
+                    if move_counter == 10:
+                        return False
+                    else:
+                        e_counter += 1
+                        pass
+                else:
+                    delay.sleep(1)
+                    print(roll.roll_result())
+                    print("draw")
+                    move_counter += 1
+                    if move_counter == 10:
+                        return False
+                    else:
+                        pass
 
     elif state == "rest":
         print("You sit and rest for a moment; the sun beams down and you feel well\n")
+        print("Your current health level is {0}".format(player.cur_health))
 
     elif state == "craft":
         print("You pull out a hammer and start getting creative\n")
+        print("Your current crafting level is {0}".format(player.crafting))
 
     elif state == "trade":
         print("You put on your haggling hat and start looking for deals\n")
+        print("Your current trading level is {0}".format(player.trading))
 
     else:
         print("You sit on a rock, and ponder the mysteries of life\n")
@@ -182,7 +235,7 @@ def enemy_data():
     enemy_item_data = {"example 1": "weapon", "example 2": "coin", "example 3": "clothing"}
     enemy_item_rand = choice(list(enemy_item_data))
 
-    return enemy_name_rand, enemy_health_data, enemy_skill_data, enemy_fighting_data, enemy_item_rand
+    return "".join(enemy_name_rand)
 
 
 if __name__ == "__main__":
