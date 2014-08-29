@@ -38,14 +38,17 @@ class EnemyCharacter(Characters):
     Contains properties of enemy character (character object)
     - name, health stats, levels, items
     """
-    def __init__(self, enemy_name, enemy_health, enemy_level, enemy_fighting, enemy_items):
+
+    name = ""
+    min_health = 1
+    enemy_health = 20
+    skill_level = 1
+    skill_fighting = 1
+    item_list = {}
+
+    def __init__(self, name):
         Characters.__init__(self)
-        self.name = enemy_name
-        self.min_health = 1
-        self.enemy_health = enemy_health
-        self.skill_level = enemy_level
-        self.skill_fighting = enemy_fighting
-        self.item_list = enemy_items
+        self.name = name
 
     def enemy_data(self):
         e_data = dict(Name=self.name, Health=self.enemy_health, Level=self.skill_level, Items=self.item_list)
@@ -59,18 +62,20 @@ class PlayerCharacter(Characters):
     Contains properties of player character (character object)
     - name, health stats, state, levels, items
     """
-    def __init__(self, name, state, level, crafting, fighting, trading):
+    name = ""
+    state = ""
+    min_health = 1
+    cur_health = 50
+    max_health = 999
+    level = 1
+    crafting = 1
+    fighting = 1
+    trading = 1
+    item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
+
+    def __init__(self, name):
         Characters.__init__(self)
         self.name = name
-        self.min_health = 1
-        self.cur_health = 50
-        self.max_health = 999
-        self.state = state
-        self.skill_level = level
-        self.skill_crafting = crafting
-        self.skill_fighting = fighting
-        self.skill_trading = trading
-        self.item_list = {"Iron Sword": "An old, rusted sword", "Satchel": "Old leather satchel"}
 
     def player_data(self):
         p_data = dict(Name=self.name, Health=self.cur_health, State=self.state, Level=self.skill_level,
@@ -146,8 +151,8 @@ def game_state(state):
     elif state == "fight":
         print("You are drawn into battle\n")
         if randint(2, 4) > 2:
-            new_enemy = (EnemyCharacter("Goblin", 25, 2, 3, {"Sword": "_weapon_", "Shield": "_weapon_", 2: "_coin_"}))
-            print("Battle: {0} \n vs \n {1} ".format(player.player_data(), new_enemy.enemy_data()))
+            new_enemy = EnemyCharacter("Goblin")
+            print("Battle: \n {0} \n vs \n {1} ".format(player.name, new_enemy.name))
 
     elif state == "rest":
         print("You sit and rest for a moment; the sun beams down and you feel well\n")
@@ -166,5 +171,5 @@ if __name__ == "__main__":
     print("Enter your name")
     player_name = input("~>")
     print("\nLet's get going {0}".format(player_name))
-    player = PlayerCharacter(player_name, "state", 1, 1, 2, 1)
+    player = PlayerCharacter(player_name)
     main()
