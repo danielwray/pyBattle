@@ -41,7 +41,7 @@ class PlayerCharacter(object):
     name = ''
     state = ''
     min_health = 1
-    cur_health = 50
+    cur_health = 100
     max_health = 999
     level = 1
     crafting = 1
@@ -60,7 +60,6 @@ class Die(object):
     Contains methods for Die class (Die object)
     - roll_result (get random ints), roll_comparison(get random ints and determine winner)
     """
-
     def __init__(self):
         self.player_roll = randint(1, 6)
         self.enemy_roll = randint(1, 6)
@@ -120,6 +119,7 @@ def main():
 
 
 def game_state(state):
+    delay = time
     if state == ' ':
         print('...\n')
 
@@ -134,7 +134,6 @@ def game_state(state):
         e_dat_items = e_dat.get('Items')
         new_enemy = EnemyCharacter(e_dat_name, e_dat_health, e_dat_level, e_dat_fight_level, e_dat_items)
         roll = Die()
-        delay = time
         d_counter = 0
         p_counter = 0
         e_counter = 0
@@ -142,7 +141,8 @@ def game_state(state):
         print('Battle stats: \n{0} \nvs \na {1}\n'.format(player.name, new_enemy.name))
         print('{0} health {1} | {2} health {3}'.format(player.name, player.cur_health,
                                                        new_enemy.name, new_enemy.cur_health))
-        print('{0} has {1} | {2} has {3}\n'.format(player.name, player.item_list, new_enemy.name, new_enemy.item_list))
+        print('{0} carries: {1} | {2} carries: {3}\n'.format(player.name, ", ".join(player.item_list),
+                                                             new_enemy.name, new_enemy.item_list))
         delay.sleep(2)
 
         while battle_active:
@@ -152,14 +152,17 @@ def game_state(state):
             if new_enemy.cur_health == 0:
                 # player wins if enemy health 0
                 delay.sleep(1)
-                print('\n{0} wins the battle\n'.format(player.name))
-                print('{0} won in {1} moves'.format(player.name, p_counter))
+                print('\n{0} wins the battle'.format(player.name))
+                print('{0} won in {1} moves\n'.format(player.name, p_counter))
                 print('{0} drops {1}'.format(e_dat_name, e_dat_items))
+                add_to_inventory = player.item_list
+                add_to_inventory[new_enemy.item_list] = 'Looted item'
+                print('{0} now carries {1}'.format(player.name, ', '.join(player.item_list)))
                 return False
             elif player.cur_health == 0:
                 # enemy wins if player health 0
                 delay.sleep(1)
-                print('\nThe {0} wins the battle\n'.format(new_enemy.name))
+                print('\nThe {0} wins the battle'.format(new_enemy.name))
                 print('{0} won in {1} moves'.format(new_enemy.name, e_counter))
                 return False
             elif new_enemy.cur_health == 0 and player.cur_health == 0:
@@ -196,24 +199,25 @@ def game_state(state):
                     pass
 
     elif state == 'rest':
-        print('You sit and rest for a moment; the sun beams down and you feel well\n')
+        print('You sit and rest for a moment; weary of your past adventures you start to recover from your wounds.\n')
         print('Your current health level is {0}'.format(player.cur_health))
-        cheat = input('Type gimme to increase health by 10 points: ')
-        if cheat == 'gimme':
-            player.cur_health += 10
+        recover = int(input('Enter the duration of time you rest for: '))
+        if recover > 3:
+            delay.sleep(recover)
+            player.cur_health = 100
         else:
             print('Uh oh!')
 
     elif state == 'craft':
-        print('You pull out a hammer and start getting creative\n')
+        print('You pull out a hammer and start getting creative.\n')
         print('Your current crafting level is {0}'.format(player.crafting))
 
     elif state == 'trade':
-        print('You put on your haggling hat and start looking for deals\n')
+        print('You put on your haggling hat and start looking for deals.\n')
         print('Your current trading level is {0}'.format(player.trading))
 
     else:
-        print('You sit on a rock, and ponder the mysteries of life\n')
+        print('You sit on a rock, and ponder the mysteries of life.\n')
 
 
 # make this into a class so I can call the separate data returns to enter into enemy instances.
@@ -223,14 +227,14 @@ def enemy_data():
                        'escaped prisoner', 'outlaw', 'deserting soldier', 'trained man-at-arms', 'landed knight',
                        'knight', 'turnip']
     enemy_name_rand = choice(list(enemy_name_data))
-    enemy_health_data = randint(10, 200)
+    enemy_health_data = randint(10, 50)
     enemy_skill_data = randint(1, 10)
     enemy_fighting_data = randint(1, 3)
-    enemy_item_data = {'example 1': 'weapon', 'example 2': 'coin', 'example 3': 'clothing'}
+    enemy_item_data = ('An old rusted axe', 'Old leather jerkin')
     enemy_item_rand = choice(list(enemy_item_data))
 
     return {'Name': ''.join(enemy_name_rand), 'Health': enemy_health_data, 'Level': enemy_skill_data,
-            'Fight level': enemy_fighting_data, 'Items': ''.join(enemy_item_rand)}
+            'Fight level': enemy_fighting_data, 'Items': enemy_item_rand}
 
 
 if __name__ == '__main__':
