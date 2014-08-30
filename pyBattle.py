@@ -47,7 +47,7 @@ class PlayerCharacter(object):
     crafting = 1
     fighting = 2
     trading = 1
-    item_list = {'Iron Sword': 'An old, rusted sword', 'Satchel': 'Old leather satchel'}
+    item_list = {'A rusted Sword': 'An old, rusted sword'}
 
     def __init__(self, name):
         self.name = name
@@ -199,14 +199,14 @@ def game_state(state):
                     pass
 
     elif state == 'rest':
-        print('You sit and rest for a moment; weary of your past adventures you start to recover from your wounds.\n')
+        print('You sit and rest for a while.\n')
         print('Your current health level is {0}'.format(player.cur_health))
-        recover = int(input('Enter the duration of time you rest for: '))
-        if recover > 3:
+        recover = int(input('Enter the duration of time you wish to rest for: '))
+        if recover > 0:
             delay.sleep(recover)
-            player.cur_health = 100
+            player.cur_health += recover
         else:
-            print('Uh oh!')
+            print('You don\'t seem to feel any better for resting')
 
     elif state == 'craft':
         print('You pull out a hammer and start getting creative.\n')
@@ -230,7 +230,9 @@ def enemy_data():
     enemy_health_data = randint(10, 50)
     enemy_skill_data = randint(1, 10)
     enemy_fighting_data = randint(1, 3)
-    enemy_item_data = ('An old rusted axe', 'Old leather jerkin')
+    enemy_item_data = ('An old rusted axe', 'An old rusted sword', 'An Old leather jerkin', 'An old steel helmet',
+                       'An old pair of gauntlets', 'Some old leather boots', 'Old chain mail', 'A hammer',
+                       'A single shoe')
     enemy_item_rand = choice(list(enemy_item_data))
 
     return {'Name': ''.join(enemy_name_rand), 'Health': enemy_health_data, 'Level': enemy_skill_data,
