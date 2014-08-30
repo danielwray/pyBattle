@@ -3,10 +3,6 @@
 __Version__ = '0.0.5'
 __status__ = 'Prototype'
 
-'''
-pyBattle refactor
-The code became to much of a mess - I couldn't take it anymore
-'''
 
 from random import randint
 from random import choice
@@ -240,6 +236,6 @@ def enemy_data():
 if __name__ == '__main__':
     print('Enter your name')
     player_name = input('~>')
-    print('\nLets get going {0}'.format(player_name))
+    print('\nLets get going, {0}'.format(player_name))
     player = PlayerCharacter(player_name)
     main()
