@@ -1,11 +1,11 @@
-pyBattle.py
+pyBattle
 ========
 
 Small fighting game based upon random dice throws - A first step to learn Python, and programming in general.
 
 ## Usage:
 
--- Execute the script to name a character and fight against enemies, win or lose nothing much happens at the moment.
+-- Execute the script (main.py) to name a character and fight against enemies, win or lose nothing much happens at the moment.
 
 ## Version 1.0 targets:
 1. ~~Loot coins and weapons from defeated enemies~~
