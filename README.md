@@ -12,6 +12,7 @@ Small fighting game based upon random dice throws - A first step to learn Python
 2. Improve odds of winning depending on weapons and armour equiped
 3. Repair weapons and armour (deducts coins)
 4. Keep track of stats i.e. number of wins, loses
+5. Use all third-person, or first-person narrative (not a mix!)
 
 
 ## Planned development (Large additions - Version 2.0, 2.5, 3.0...):
