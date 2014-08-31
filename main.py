@@ -1,197 +1,269 @@
 #!/usr/bin/env python3
 
-__Version__ = '0.0.4'
+__Version__ = '0.0.5'
 __status__ = 'Prototype'
 
-import random
+from random import randint
+from random import choice
+import time
 
 
-class Enemy:
-    @property
-    def enemy_name(self):
-        name_list = ("Goblin", "Troll", "Bandit", "Man at Arms", "Knight", "House Guard", "Elite Guard",
-                     "Giant", "Dragon")
-        return random.choice(name_list)
+class EnemyCharacter(object):
+    """
+    Character class
+        - EnemyCharacter class
+    Contains properties of enemy character (character object)
+    - name, health stats, levels, items
+    """
+    name = ''
+    min_health = 1
+    cur_health = 1
+    skill_level = 1
+    fighting = 1
+    # {'name' : int(value)}
+    item_list = {}
 
-    @property
-    def enemy_hp(self):
-        hp = random.randint(10, 120)
-        return hp
-
-    @property
-    def enemy_dp(self):
-        dp = random.randint(0, 12)
-        return dp
-
-    @property
-    def enemy_items(self):
-        items = ("axe", "sword", "shield", "helmet", "leather armour")
-        return random.choice(items)
-
-    @property
-    def enemy_coins(self):
-        coins = random.randint(0, 12)
-        return coins
+    def __init__(self, name, enemy_health, skill_level, fighting, item_list):
+        self.name = name
+        self.cur_health = enemy_health
+        self.skill_level = skill_level
+        self.fighting = fighting
+        self.item_list = item_list
 
 
-class Player:
-    @property
-    def player_name(self):
-        name = input("Enter your name: ")
-        return "{0}, the bard's will tell tales of your bravery!".format(name)
+class PlayerCharacter(object):
+    """
+    Character class
+        - PlayerCharacter class
+    Contains properties of player character (character object)
+    - name, health stats, state, levels, items
+    """
+    name = ''
+    state = ''
+    min_health = 1
+    cur_health = 100
+    max_health = 1
+    level = 1
+    crafting = 1
+    fighting = 1
+    trading = 1
+    item_list = {'A rusted Sword': 2}
 
-    @property
-    def player_hp(self):
-        hp = 125
-        return hp
-
-    @property
-    def player_dp(self):
-        dp = random.randint(0, 36)
-        return dp
-
-    @property
-    def player_items(self):
-        items = ()
-        return items
-
-    @property
-    def player_coins(self):
-        coins = 0
-        return coins
-
-    @property
-    def player_wins(self):
-        p_wins = 0
-        return p_wins
-
-    @property
-    def player_loses(self):
-        p_loses = 0
-        return p_loses
+    def __init__(self, name):
+        self.name = name
+        self.cur_health = self.cur_health
+        self.min_health = self.min_health
+        self.cur_health = self.cur_health
+        self.max_health = self.max_health
+        self.level = self.level
+        self.crafting = self.crafting
+        self.fighting = self.fighting
+        self.trading = self.trading
+        self.item_list = self.item_list
 
 
-class CurrentPlayer:
-    def __init__(self, p_name, p_hp):
-        self.player_name = p_name
-        self.player_hp = p_hp
+class Die(object):
+    """
+    Die
+    Contains methods for Die class (Die object)
+    - roll_result (get random ints), roll_comparison(get random ints and determine winner)
+    """
 
-    @property
-    def current_player_data(self):
-        current_name = self.player_name
-        current_hp = self.player_hp
-        return current_name, current_hp
+    def __init__(self):
+        self.player_roll = randint(1, 6)
+        self.enemy_roll = randint(1, 6)
+
+    def roll_result(self):
+        return '{0} rolled: {1} | Enemy rolled: {2}'.format(player.name, self.player_roll, self.enemy_roll)
+
+    def roll_comparison(self):
+        self.player_roll = randint(1, 6)
+        self.enemy_roll = randint(1, 6)
+        if self.player_roll > self.enemy_roll:
+            outcome = 0
+            return outcome
+        elif self.player_roll < self.enemy_roll:
+            outcome = 1
+            return outcome
+        elif self.player_roll == self.enemy_roll:
+            outcome = 2
+            return outcome
+        else:
+            return 'Error rolling die!'
 
 
-class CurrentEnemy:
-    def __init__(self, e_name, e_hp, e_loot):
-        self.enemy_name = e_name
-        self.enemy_hp = e_hp
-        self.enemy_loot = e_loot
-
-    @property
-    def current_enemy_data(self):
-        current_name = self.enemy_name
-        current_hp = self.enemy_hp
-        current_loot = self.enemy_loot
-        return current_name, current_hp, current_loot
-
-
-class Dice:
-    @property
-    def dice_data(self):
-        dice_result = random.randint(1, 6)
-        return dice_result
+class PlayerInput:
+    @staticmethod
+    def input_parser():
+        player_input = input('~> ')
+        player_output = player_input
+        return player_output.lower()
 
 
 def main():
-    # game intro
-    print("|| Welcome to pyBattle, the most awe-inspiring game ever developed!||\n")
-
     game_active = True
-    player_class = Player()
-    enemy_class = Enemy()
-    dice_class = Dice()
-    current_player_class = CurrentPlayer(player_class.player_name, player_class.player_hp)
-    current_enemy_class = CurrentEnemy(enemy_class.enemy_name, enemy_class.enemy_hp, enemy_class.enemy_items)
-    current_dice = dice_class.dice_data
+    init_game = input('Type "New" to start a new game: ')
 
-    print(current_player_class.player_name)
+    if init_game == 'New':
+        print('Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n')
+        print('Make a character, battle monsters, capture goodies, craft items.\n')
+        print('type menu to bring up the available activities.\n')
+    else:
+        print('Ive always wanted to be a lumberjack.')
+        exit()
 
-    # game loop
     while game_active:
-        yes_list = ("Y", "YES", "SURE", "ATTACK", "FIGHT", "HIT")
-        no_list = ("N", "NO", "NOPE", "DEFEND", "SHIELD")
-        quit_list = ("EXIT", "QUIT", "END")
-        player_fight_input = input("Do you want to enter the fighting pit? \n")
-        player_input_upper = player_fight_input.upper()
-        fight_active = True
-        if player_input_upper in yes_list:
-            print("Your current enemy is an {0}".format(current_enemy_class.enemy_name))
-            enemy_health = current_enemy_class.enemy_hp
-            player_health = current_player_class.player_hp
-            enemy_remaining_health = enemy_health
-            player_remaining_health = player_health
-            # battle system
-            while fight_active:
-                player_attack = player_class.player_dp
-                enemy_attack = enemy_class.enemy_dp
-                player_attack_input = input("Do you wish to attack?")
-                player_attack_input_upper = player_attack_input.upper()
-                # player loses
-                if enemy_remaining_health < 0:
-                    print("You win")
-                    # coins and items get pushed to player
-                    fight_active = False
-                # player wins
-                elif player_remaining_health < 0:
-                    print("You lose")
-                    # coins and items get pulled from player
-                    fight_active = False
-                else:
-                    # attack loop
-                    if player_attack_input_upper in yes_list:
-                        current_dice = dice_class.dice_data
-                        if 4 < current_dice < 6:
-                            # enemy loses health
-                            enemy_remaining_health = enemy_remaining_health - player_attack
-                            print("Enemy hit")
-                        elif current_dice < 4:
-                            # player loses health
-                            player_remaining_health = player_remaining_health - enemy_attack
-                            print("You are hit")
-                        elif current_dice > 5:
-                            # enemy defends and gains health
-                            enemy_add_health = random.randint(0, 10)
-                            enemy_remaining_health = enemy_remaining_health + enemy_add_health
-                            print("Enemy defended, and gained health")
-                        else:
-                            print("Missed")
-                    # defend loop
-                    elif player_attack_input_upper in no_list:
-                        if current_dice > 4:
-                            # player defends and gains health
-                            print("You defend")
-                            player_add_health = random.randint(0, 20)
-                            player_remaining_health = player_remaining_health + player_add_health
-                        else:
-                            # player loses health
-                            player_remaining_health = player_remaining_health - enemy_attack
-                            print("You failed to defend")
-        elif player_input_upper in no_list:
-            print("Would you like to change your offensive, and/ or defensive setup?")
-            if player_attack_input_upper in yes_list:
-                pass
-            elif player_attack_input_upper in no_list:
-                pass
-            else:
-                break
-        elif player_input_upper in quit_list:
-            print("The tales will recall your name")
-            exit()
+        game_mode = game_state
+        command = PlayerInput.input_parser()
+        if command == 'menu':
+            print('Select a game mode: rest, fight, craft, trade.\n')
+            game_mode(PlayerInput.input_parser())
+        elif command == 'help?':
+            print(' insert game help here - read from file...')
+        elif command == 'quit':
+            print('Goodbye')
+            return False
         else:
-            pass
+            print('For a list of commands type help?')
 
 
-if __name__ == "__main__":
+def game_state(state):
+    command = PlayerInput()
+    delay = time
+    if state == ' ':
+        print('...\n')
+
+    elif state == 'fight':
+        print('You are drawn into battle!\n')
+        battle_active = True
+        e_dat = enemy_data()
+        e_dat_name = e_dat.get('Name')
+        e_dat_health = e_dat.get('Health')
+        e_dat_level = e_dat.get('Level')
+        e_dat_fight_level = e_dat.get('Fight level')
+        e_dat_items = e_dat.get('Items')
+        new_enemy = EnemyCharacter(e_dat_name, e_dat_health, e_dat_level, e_dat_fight_level, e_dat_items)
+        roll = Die()
+        d_counter = 0
+        p_counter = 0
+        e_counter = 0
+
+        print('Battle stats: \n{0} \nvs \na {1}\n'.format(player.name, new_enemy.name))
+        print('{0} health {1} | {2} health {3}'.format(player.name, player.cur_health,
+                                                       new_enemy.name, new_enemy.cur_health))
+        print('{0} carries: {1} | {2} carries: {3}\n'.format(player.name, ", ".join(player.item_list),
+                                                             new_enemy.name, new_enemy.item_list))
+        delay.sleep(2)
+
+        while battle_active:
+            roll_data = roll.roll_comparison()
+            player_attack_damage = roll.player_roll
+            enemy_attack_damage = roll.enemy_roll
+            if new_enemy.cur_health == 0:
+                # player wins if enemy health 0
+                delay.sleep(1)
+                print('\n{0} wins the battle'.format(player.name))
+                print('{0} won in {1} moves\n'.format(player.name, p_counter))
+                print('{0} drops {1}'.format(e_dat_name, e_dat_items))
+                print('Do you wish to loot the dropped items?')
+                if command.input_parser() == 'yes':
+                    add_to_inventory = player.item_list
+                    add_to_inventory[new_enemy.item_list] = 'Looted item'
+                    print('{0} now carries {1}'.format(player.name, ', '.join(player.item_list)))
+                    return False
+                else:
+                    print("You leave the items.")
+                    return False
+            elif player.cur_health == 0:
+                # enemy wins if player health 0
+                delay.sleep(1)
+                print('\nThe {0} wins the battle'.format(new_enemy.name))
+                print('{0} won in {1} moves'.format(new_enemy.name, e_counter))
+                return False
+            elif new_enemy.cur_health == 0 and player.cur_health == 0:
+                # draw if enemy health and player health 0
+                delay.sleep(1)
+                print('Draw!')
+                return False
+            else:
+                if roll_data == 0:
+                    delay.sleep(1)
+                    print(roll.roll_result())
+                    print('Attacking')
+                    new_enemy.cur_health -= player.fighting * player_attack_damage
+                    if new_enemy.cur_health < 1:
+                        new_enemy.cur_health = 0
+                    print('Enemy has {0} health remaining\n'.format(new_enemy.cur_health))
+                    p_counter += 1
+                    pass
+                elif roll_data == 1:
+                    delay.sleep(1)
+                    print(roll.roll_result())
+                    print('Defending')
+                    player.cur_health -= new_enemy.fighting * enemy_attack_damage
+                    if player.cur_health < 1:
+                        player.cur_health = 0
+                    print('Player has {0} health remaining\n'.format(player.cur_health))
+                    e_counter += 1
+                    pass
+                else:
+                    delay.sleep(1)
+                    print(roll.roll_result())
+                    print('Draw!\n')
+                    d_counter += 1
+                    pass
+
+    elif state == 'rest':
+        print('You sit and rest for a while.\n')
+        print('Your current health level is {0}'.format(player.cur_health))
+        while True:
+            try:
+                recover = int(input('Enter the duration of time you wish to rest for: '))
+                if recover > 0:
+                    delay.sleep(recover)
+                    player.cur_health += recover
+                    break
+                else:
+                    print('You don\'t seem to feel any better for resting.')
+                    break
+            except ValueError:
+                print('You didn\'t enter a number.')
+                break
+
+    elif state == 'craft':
+        print('You pull out a hammer and start getting creative.\n')
+        print('Your current crafting level is {0}'.format(player.crafting))
+
+    elif state == 'trade':
+        print('You put on your haggling hat and start looking for deals.\n')
+        print('Your current trading level is {0}'.format(player.trading))
+
+    else:
+        print('You sit on a rock, and ponder the mysteries of life.\n')
+
+
+# make this into a class so I can call the separate data returns to enter into enemy instances.
+def enemy_data():
+    enemy_name_data = ['small goblin', 'angry goblin', 'warrior goblin', 'berserk goblin', 'king goblin',
+                       'mediocre orc', 'slightly less mediocre, and more smelly orc', 'orc leader', 'thief',
+                       'escaped prisoner', 'outlaw', 'deserting soldier', 'trained man-at-arms', 'landed knight',
+                       'knight', 'turnip']
+    enemy_name_rand = choice(list(enemy_name_data))
+    enemy_health_data = randint(10, 50)
+    enemy_skill_data = randint(1, 10)
+    enemy_fighting_data = randint(1, 3)
+    enemy_item_data = ('An old rusted axe', 'An old rusted sword', 'An Old leather jerkin', 'An old steel helmet',
+                       'An old pair of gauntlets', 'Some old leather boots', 'Old chain mail', 'A hammer',
+                       'A single shoe')
+    enemy_item_rand = choice(list(enemy_item_data))
+
+    return {'Name': ''.join(enemy_name_rand), 'Health': enemy_health_data, 'Level': enemy_skill_data,
+            'Fight level': enemy_fighting_data, 'Items': enemy_item_rand}
+
+
+if __name__ == '__main__':
+    print('Enter your name')
+    player_name = input('~>')
+    print('\nLets get going, {0}'.format(player_name))
+    player = PlayerCharacter(player_name)
     main()
