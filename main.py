@@ -333,9 +333,9 @@ def enemy_data():
     enemy_health_data = randint(10, 75)
     enemy_skill_data = randint(1, 6)
     enemy_fighting_data = randint(1, 3)
-    enemy_item_data = {'An old rusted axe': 3, 'An old rusted sword': 2, 'An Old leather jerkin': 0,
-                       'An old steel helmet': 0, 'An old pair of gauntlets': 0, 'Some old leather boots': 0,
-                       'Old chain mail': 0, 'A hammer': 1, 'A single shoe': 2}
+    enemy_item_data = {'An old rusted axe': 1, 'An old rusted sword': 1, 'An Old leather jerkin': 1,
+                       'An old steel helmet': 1, 'An old pair of gauntlets': 1, 'Some old leather boots': 1,
+                       'Old chain mail': 1, 'A hammer': 1, 'A single shoe': 1}
     enemy_coins_data = randint(0, 10)
     enemy_name_rand = choice(list(enemy_name_data))
     enemy_item_rand = choice(list(enemy_item_data))
