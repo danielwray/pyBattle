@@ -11,7 +11,7 @@ def main():
     my_skill = 2
     my_target = 100
 
-    # randomly select a value from the weapons list
+    # select a value from the weapons list
     select_weapon = input("Select your weapon {0}".format(' '.join(my_weapons)))
     if select_weapon in my_weapons:
         weapon_choice = select_weapon
