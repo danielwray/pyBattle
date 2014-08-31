@@ -42,10 +42,10 @@ class PlayerCharacter(object):
     state = ''
     min_health = 1
     cur_health = 100
-    max_health = 999
+    max_health = 1
     level = 1
     crafting = 1
-    fighting = 2
+    fighting = 1
     trading = 1
     item_list = {'A rusted Sword': 'An old, rusted sword'}
 
@@ -93,9 +93,9 @@ class PlayerInput:
 
 def main():
     game_active = True
-    init_game = input('Type new game to start a new game: ')
+    init_game = input('Type "New" to start a new game: ')
 
-    if init_game == 'new game':
+    if init_game == 'New':
         print('Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n')
         print('Make a character, battle monsters, capture goodies, craft items.\n')
         print('type menu to bring up the available activities.\n')
@@ -119,6 +119,7 @@ def main():
 
 
 def game_state(state):
+    command = PlayerInput()
     delay = time
     if state == ' ':
         print('...\n')
@@ -155,10 +156,15 @@ def game_state(state):
                 print('\n{0} wins the battle'.format(player.name))
                 print('{0} won in {1} moves\n'.format(player.name, p_counter))
                 print('{0} drops {1}'.format(e_dat_name, e_dat_items))
-                add_to_inventory = player.item_list
-                add_to_inventory[new_enemy.item_list] = 'Looted item'
-                print('{0} now carries {1}'.format(player.name, ', '.join(player.item_list)))
-                return False
+                print('Do you wish to loot the dropped items?')
+                if command.input_parser() == 'yes':
+                    add_to_inventory = player.item_list
+                    add_to_inventory[new_enemy.item_list] = 'Looted item'
+                    print('{0} now carries {1}'.format(player.name, ', '.join(player.item_list))
+                    return False
+                else:
+                    print("You leave the items.")
+                    return False
             elif player.cur_health == 0:
                 # enemy wins if player health 0
                 delay.sleep(1)
@@ -201,12 +207,19 @@ def game_state(state):
     elif state == 'rest':
         print('You sit and rest for a while.\n')
         print('Your current health level is {0}'.format(player.cur_health))
-        recover = int(input('Enter the duration of time you wish to rest for: '))
-        if recover > 0:
-            delay.sleep(recover)
-            player.cur_health += recover
-        else:
-            print('You don\'t seem to feel any better for resting')
+        while True:
+            try:
+                recover = int(input('Enter the duration of time you wish to rest for: '))
+                if recover > 0:
+                    delay.sleep(recover)
+                    player.cur_health += recover
+                    break
+                else:
+                    print('You don\'t seem to feel any better for resting.')
+                    break
+            except ValueError:
+                print('You didn\'t enter a number.')
+                break
 
     elif state == 'craft':
         print('You pull out a hammer and start getting creative.\n')
