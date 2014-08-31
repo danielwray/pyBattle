@@ -11,12 +11,12 @@ def main():
     my_skill = 2
     my_target = 100
 
-    # randomly select a value from the weapons list
-    select_weapon = input("Select your weapon {0}".format(' '.join(my_weapons)))
+    # select a value from the weapons list
+    select_weapon = input("Select your weapon from the list\n{0}\n~> ".format('| '.join(my_weapons)))
     if select_weapon in my_weapons:
         weapon_choice = select_weapon
         weapon_choice = my_weapons[weapon_choice]
-        print(weapon_choice)
+        print(select_weapon)
 
     while my_target > 1:
         # attack damage is equal to weapon value divided by random int times the skill level

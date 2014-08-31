@@ -24,8 +24,8 @@ class PlayerCharacter(object):
     crafting = 1
     fighting = 1
     trading = 1
-    item_list = {'A rusted Sword': 2}
-    coins = 10
+    item_list = {'A rusted sword': 2, 'An old dane axe': 4, 'A satchel': 0}
+    coins = 100
     won = 0
     lost = 0
     drawn = 0
@@ -168,7 +168,7 @@ def stats_system():
           'Trading: {3} | '
           'Fighting: {4}'.format(player.name, player.level, player.crafting, player.trading, player.fighting))
     print('{0} Has {1} coins'.format(player.name, player.coins))
-    print('{0} Carries {1}\n'.format(player.name, ' '.join(player.item_list)))
+    print('{0} Carries {1}\n'.format(player.name, ', '.join(player.item_list)))
 
 
 def battle_system():
@@ -192,6 +192,16 @@ def battle_system():
     print('Battle stats: \n{0} \nvs \nA {1}\n'.format(player.name, new_enemy.name))
     print('{0} health {1} | {2} health {3}'.format(player.name, player.cur_health, new_enemy.name,
                                                    new_enemy.cur_health))
+
+    weapon_selection = input('Select your weapon\nAvailable: {0}\n~> '.format(', '.join(player.item_list)))
+    if weapon_selection in player.item_list:
+        weapon_damage = weapon_selection
+        weapon_damage = player.item_list[weapon_damage]
+        print('{0} adds {1} attack points'.format(weapon_selection, weapon_damage))
+    else:
+        print('You don\'t posses a {0}'.format(weapon_selection))
+        weapon_damage = 1
+
     print('{0} carries: {1} and {2} coins\n'.format(new_enemy.name, new_enemy.item_list, new_enemy.coins))
     delay.sleep(2)
 
@@ -211,9 +221,9 @@ def battle_system():
             # loot enemy statement
             if command.input_parser() == 'yes':
                 add_to_inventory = player.item_list
-                add_to_inventory[new_enemy.item_list] = 'Looted item'
+                add_to_inventory[new_enemy.item_list] = randint(1, 5)
                 player.coins = player.coins + new_enemy.coins
-                print('{0} now carries {1}'.format(player.name, ', '.join(player.item_list)))
+                print('Looted items: {0}'.format(new_enemy.item_list))
                 print('Looted coins: {0}'.format(new_enemy.coins))
                 return False
             else:
@@ -237,16 +247,19 @@ def battle_system():
 
         # Attacking/ Defending loop
         else:
+            # player attacks enemy
             if roll_data == 0:
                 delay.sleep(1)
                 print(roll.roll_result())
                 print('Attacking')
-                new_enemy.cur_health -= player.fighting * player_attack_damage
+                new_enemy.cur_health -= player.fighting * player_attack_damage + weapon_damage
                 if new_enemy.cur_health < 1:
                     new_enemy.cur_health = 1
                 print('Enemy has {0} health points remaining\n'.format(new_enemy.cur_health))
                 p_counter += 1
                 pass
+
+            # enemy attacks player
             elif roll_data == 1:
                 delay.sleep(1)
                 print(roll.roll_result())
@@ -257,6 +270,8 @@ def battle_system():
                 print('Player has {0} health points remaining\n'.format(player.cur_health))
                 e_counter += 1
                 pass
+
+            # no hit
             else:
                 delay.sleep(1)
                 print(roll.roll_result())
@@ -315,12 +330,12 @@ def enemy_data():
                        'mediocre orc', 'slightly less mediocre, and more smelly orc', 'orc leader', 'thief',
                        'escaped prisoner', 'outlaw', 'deserting soldier', 'trained man-at-arms',
                        'landed knight', 'knight', 'turnip']
-    enemy_health_data = randint(10, 50)
-    enemy_skill_data = randint(1, 10)
+    enemy_health_data = randint(10, 75)
+    enemy_skill_data = randint(1, 6)
     enemy_fighting_data = randint(1, 3)
-    enemy_item_data = ('An old rusted axe', 'An old rusted sword', 'An Old leather jerkin', 'An old steel helmet',
-                       'An old pair of gauntlets', 'Some old leather boots', 'Old chain mail', 'A hammer',
-                       'A single shoe')
+    enemy_item_data = {'An old rusted axe': 3, 'An old rusted sword': 2, 'An Old leather jerkin': 0,
+                       'An old steel helmet': 0, 'An old pair of gauntlets': 0, 'Some old leather boots': 0,
+                       'Old chain mail': 0, 'A hammer': 1, 'A single shoe': 2}
     enemy_coins_data = randint(0, 10)
     enemy_name_rand = choice(list(enemy_name_data))
     enemy_item_rand = choice(list(enemy_item_data))
