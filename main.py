@@ -114,16 +114,16 @@ def main():
     game_active = True
     init_game = input('Type "New" to start a new game: ')
 
-    if init_game == 'New':
-        print('Welcome to pyBattle, an exercise in enlightenment, and a wannabe-programmers journey.\n')
-        print('Make a character, battle monsters, capture goodies, craft items.\n')
-        print('type menu to bring up the available activities.\n')
+    if init_game == 'new' or init_game == 'New':
+        print('Welcome to pyBattle Version 0.0.5.')
+        print('Create a character, battle monsters, loot items, craft weapons...\n')
     else:
         print('Ive always wanted to be a lumberjack.')
         exit()
 
     while game_active:
         game_mode = game_state
+        print('type menu to bring up the available activities.\n')
         command = PlayerInput.input_parser()
         if command == 'menu':
             print('Select a game mode: stats, rest, fight, craft, trade.\n')
@@ -163,12 +163,12 @@ def stats_system():
     print('{0} has won: {1} | lost: {2} | drawn: {3} | battles'.format(player.name, player.won,
                                                                        player.lost, player.drawn))
     print('{0} has {1} health points remaining'.format(player.name, player.cur_health))
-    print('Level: {0} | '
-          'Crafting skills: {1} | '
-          'Trading skills: {2} | '
-          'Fighting skills: {3}'.format(player.level, player.crafting, player.trading, player.fighting))
-    print('Has {0} coins'.format(player.coins))
-    print('Carries {0}\n'.format(' '.join(player.item_list)))
+    print('{0}\'s Level: {1} | '
+          'Crafting: {2} | '
+          'Trading: {3} | '
+          'Fighting: {4}'.format(player.name, player.level, player.crafting, player.trading, player.fighting))
+    print('{0} Has {1} coins'.format(player.name, player.coins))
+    print('{0} Carries {1}\n'.format(player.name, ' '.join(player.item_list)))
 
 
 def battle_system():
